@@ -12,6 +12,22 @@ $PATH$/practico_02> python -m source.ejercicio_02
 
 # Completar
 
+import sys
+import pathlib
+
+# BASE_DIR apunta al directorio raíz del proyecto (practico_02)
+BASE_DIR = pathlib.Path(__file__).resolve().parents[1]
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
+
+import util
+
+from data import database
+
+from config import test_config
+from config.db_config import migrations
+
+import main
 
 # NO MODIFICAR - INICIO
 assert main.name == "main"

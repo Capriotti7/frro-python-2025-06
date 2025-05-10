@@ -19,6 +19,18 @@ Referencia: https://docs.python.org/3/reference/import.html#the-import-system
 
 # Completar
 
+import sys
+import pathlib
+
+# Asegura que la raíz del proyecto esté en sys.path
+BASE_DIR = pathlib.Path(__file__).resolve().parent
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
+
+# Imports como si estuviéramos desde la raíz del proyecto
+import main
+from source import util
+from source.controller import controller
 
 # NO MODIFICAR - INICIO
 assert main.name == "main"
