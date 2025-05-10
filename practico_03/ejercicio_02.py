@@ -2,15 +2,17 @@
 
 
 class Articulo:
-    """Clase con "nombre" como variable de instancia y un id incremental
-    generado automáticamente.
+    def __init__(self, nombre: str = ""):
 
-    Restricciones:
-        - Utilizar sólamente el constructor (__init__) y un método de
-          clase (@classmethod) con una variable de clase
-    """
+        self.nombre = nombre
+        self.id_ = self._get_next_id()
 
-    # Completar
+    def _get_next_id(self) -> int:
+
+        if not hasattr(Articulo, "_last_id"):
+            Articulo._last_id = 0
+        Articulo._last_id += 1
+        return Articulo._last_id
 
 
 # NO MODIFICAR - INICIO

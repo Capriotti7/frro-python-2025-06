@@ -12,11 +12,14 @@ class Animal:
 
 
 class Perro(Animal):
-    """Escribir un constructor que añada una variable de instancia llamada raza,
-    de tipo string y que tenga como valor por defecto "". Adicionalmente se debe
-    sobrecargar el método descripción para que devuelva:
-    "Soy un perro y" + método descripción del padre
-    """
+
+    def __init__(self, edad: int = 0, raza: str = ""):
+        super().__init__(edad)
+        self.raza = raza
+
+    def descripcion(self) -> str:
+        return f"Soy un perro y {super().descripcion().lower()}"
+
     # Completar
 
 
@@ -39,12 +42,19 @@ from dataclasses import dataclass
 
 @dataclass
 class Animal:
-    pass # Completar
+    edad: int
+
+    def descripcion(self) -> str:
+        return f"Tengo {self.edad} años"
 
 
 @dataclass
 class Perro(Animal):
-    pass # Completar
+    raza: str = ""
+    edad: int = 0
+
+    def descripcion(self) -> str:
+        return f"Soy un perro y {super().descripcion().lower()}"
 
 
 # NO MODIFICAR - INICIO
