@@ -4,7 +4,7 @@ import datetime
 
 from practico_04.ejercicio_02 import agregar_persona
 from practico_04.ejercicio_06 import reset_tabla
-
+import sqlite3
 
 def agregar_peso(id_persona, fecha, peso):
     """Implementar la funcion agregar_peso, que inserte un registro en la tabla 
@@ -20,7 +20,40 @@ def agregar_peso(id_persona, fecha, peso):
     - ID del peso registrado.
     - False en caso de no cumplir con alguna validacion."""
 
-    pass # Completar
+    conexion = sqlite3.connect('basededatos.db')
+    cursor = conexion.cursor()
+
+    # Verificar si la persona existe
+    cursor.execute('''
+        SELECT * FROM Persona
+        WHERE IdPersona = ?;
+    ''', (id_persona,))
+    persona = cursor.fetchone()
+
+    if not persona:
+        return False
+
+    # Verificar si ya existe un registro posterior a la fecha ingresada
+    cursor.execute('''
+        SELECT * FROM PersonaPeso
+        WHERE IdPersona = ? AND Fecha > ?;
+    ''', (id_persona, fecha.strftime('%Y-%m-%d')))
+    registro_existente = cursor.fetchone()
+
+    if registro_existente:
+        return False
+
+    # Insertar el nuevo peso
+    cursor.execute('''
+        INSERT INTO PersonaPeso (IdPersona, Fecha, Peso)
+        VALUES (?, ?, ?);
+    ''', (id_persona, fecha.strftime('%Y-%m-%d'), peso))
+    
+    conexion.commit()
+    id_peso = cursor.lastrowid
+    conexion.close()
+    
+    return id_peso
 
 
 # NO MODIFICAR - INICIO

@@ -19,7 +19,7 @@ def crear_tabla():
             FechaNacimiento DATE,
             DNI INTEGER,
             Altura INTEGER
-        );
+        )
     ''')
     conexion.commit()
     conexion.close()
@@ -31,6 +31,7 @@ def borrar_tabla():
     conexion = sqlite3.connect("basededatos.db")
     cursor = conexion.cursor()
     cursor.execute("DROP TABLE IF EXISTS Persona;")
+    cursor.execute("DELETE FROM sqlite_sequence WHERE name='Persona';") #Se resetea el autoincremental, necesario para proximos ejercicios
     conexion.commit()
     conexion.close()
 
