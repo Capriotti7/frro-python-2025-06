@@ -1,6 +1,5 @@
 # Implementar los metodos de la capa de negocio de socios.
 
-from practico_05.ejercicio_01 import Socio  
 from practico_05.ejercicio_02 import DatosSocio
 
 
@@ -80,7 +79,7 @@ class NegocioSocio(object):
         """
         socio = self.buscar(id_socio)
         if socio is not None:
-            self.datos.baja(socio)
+            self.datos.baja(id_socio)
             return True
         return False
 
