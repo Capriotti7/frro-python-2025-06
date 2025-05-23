@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Socios</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Listado de Socios</h1>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="mb-3">
+            <a href="{{ url_for('alta_socio') }}" class="btn btn-primary">Alta Socio</a>
+        </div>
+
+        {% if socios %}
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>DNI</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for socio in socios %}
+                <tr>
+                    <td>{{ socio.id }}</td>
+                    <td>{{ socio.dni }}</td>
+                    <td>{{ socio.nombre }}</td>
+                    <td>{{ socio.apellido }}</td>
+                    <td>
+                        <a href="{{ url_for('modificar_socio', id_socio=socio.id) }}" class="btn btn-warning btn-sm">Modificar</a>
+                        <a href="{{ url_for('baja_socio', id_socio=socio.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que quieres dar de baja a este socio?');">Baja</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No hay socios registrados.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
