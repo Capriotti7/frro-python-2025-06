@@ -1,12 +1,10 @@
-# NOMBRE_DEL_PROYECTO
-
-Este es un archivo que debe completarse con los datos utilizados en el TPI. Este archivo puede modificarse en el tiempo, no obstante siempre debe mantenerse en un estado consistente con el desarrollo.
-
-**Importante:** Este archivo debe mantenerse en formato Markdown (.md) y sólo se tendrá en cuenta la versión disponible en GIT.
+# Sistema Interno de Gestión Académica ISPI Oliveros
 
 ## Descripción del proyecto
 
-Definir cúal es el alcance de este proyecto y los principales objetivos que debe cumplir.
+La Fundación Hospital Oliveros es una institución educativa con carreras orientadas a medicina, ubicada en Rosario.
+Este proyecto: Sistema Interno de GEstión Académica está pensado para aliviar/facilitar las tareas administrativas del instituto. El alcance del mismo se extiende a gestión de alumnos, inscripción de alumnos a materias, control de pago de cuotas y registros académicos, en combinación con datos estadísticos útiles para la toma de decisiones.
+El objetivo del sistema es organizar, visualizar y registrar los registros académicos de alumnos. 
 
 ## Modelo de Dominio
 
@@ -18,7 +16,17 @@ Definir la arquitectura del sistema y como interactuan sus diferentes componente
 
 ## Requerimientos
 
-Definir los requerimientos del sistema.
+REQ001: El sistema debe registrar la asistencia de los alumnos.
+REQ002: El sistema debe calcular el recargo de las cuotas no pagadas.
+REQ003: El sistema debe poder calcular en un listado el porcentaje de asistencias de los alumnos.
+REQ004: El sistema debe funcionar en una página web y solo se accederá desde una PC (puede estar sujeto a modificaciones en el futuro).
+REQ008: El sistema debe poder escanear la documentacion de los alumnos y almacenarla en la BD.
+REQ009: El sistema debe calcular deuda total de cada alumno.
+REQ010: El sistema debe calcular el tiempo promedio de los alumnos en recibirse.
+
+REQ005: El sistema debe usar los colores del instituto rojo y blanco.
+REQ006: El sistema debe tener un logo siempre arriba izquierda.
+REQ007: El sistema debe estar funcional por completo los días hábiles durante el horario de atención (8:00hs a 19:00hs)
 
 ### Funcionales
 
