@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="list-header">
+        <div>
+            <h2>Materias de la Carrera</h2>
+            <p style="margin:0; font-size: 1.2em; color: #555;"><strong>{{ carrera.nombre }}</strong></p>
+        </div>
+        <a href="{% url 'academico:materia_add' carrera_pk=carrera.pk %}" class="btn-primary">Agregar Materia</a>
+    </div>
+    <table class="table-list">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Año de cursado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for materia in materias %}
+            <tr>
+                <td>{{ materia.nombre }}</td>
+                <td>{{ materia.anio_carrera }}°</td>
+                <td>
+                    <a href="{% url 'academico:materia_edit' pk=materia.pk %}">Editar</a> |
+                    <a href="{% url 'academico:materia_delete' pk=materia.pk %}" class="text-danger">Eliminar</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3">No hay materias registradas para esta carrera.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="form-actions" style="margin-top: 20px;">
+      <a href="{% url 'academico:carrera_list' %}" class="btn-secondary">← Volver a Carreras</a>
+    </div>
+</div>
+{% endblock %}

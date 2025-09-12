@@ -1,0 +1,10 @@
+<!-- templates/alumnos/alumno_form.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container form-container">
+    <h2>Agregar Nuevo Alumno</h2>
+    {% include "alumnos/_form_fields.html" with submit_button_text="Crear Alumno" %}
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container form-container">
+    <h2>{% if form.instance.pk %}Editar Materia{% else %}Agregar Nueva Materia{% endif %}</h2>
+    <p>Para la carrera: <strong>{{ carrera.nombre }}</strong></p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">{% if form.instance.pk %}Actualizar{% else %}Guardar{% endif %}</button>
+            <a href="{% url 'academico:materia_list' carrera_pk=carrera.pk %}" class="btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

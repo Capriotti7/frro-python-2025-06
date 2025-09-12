@@ -1,0 +1,56 @@
+<!-- templates/alumnos/alumno_detail.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container detail-container">
+    <div class="detail-header">
+        <h2>Ficha del Alumno</h2>
+        <div class="header-actions">
+            <a href="{% url 'alumnos:alumno_edit' pk=alumno.pk %}" class="btn-primary">Editar Alumno</a>
+            <a href="{% url 'alumnos:alumno_list' %}" class="btn-secondary">Volver al Listado</a>
+        </div>
+    </div>
+
+    <h3>Datos Personales</h3>
+    <div class="detail-grid">
+        <div class="detail-item">
+            <label>Nombre Completo</label>
+            <p>{{ alumno.apellido }}, {{ alumno.nombre }}</p>
+        </div>
+        <div class="detail-item">
+            <label>DNI</label>
+            <p>{{ alumno.dni }}</p>
+        </div>
+        <div class="detail-item">
+            <label>Fecha de Nacimiento</label>
+            <p>{{ alumno.fecha_nacimiento|date:"d/m/Y" }}</p>
+        </div>
+        <div class="detail-item">
+            <label>Nacionalidad</label>
+            <p>{{ alumno.nacionalidad }}</p>
+        </div>
+    </div>
+
+    <h3>Datos de Contacto</h3>
+    <div class="detail-grid">
+        <div class="detail-item">
+            <label>Email</label>
+            <p>{{ alumno.email }}</p>
+        </div>
+        <div class="detail-item">
+            <label>Teléfono</label>
+            <p>{{ alumno.telefono|default:"No especificado" }}</p>
+        </div>
+        <div class="detail-item">
+            <label>Dirección</label>
+            <p>{{ alumno.direccion|default:"No especificado" }}, {{ alumno.localidad }}</p>
+        </div>
+    </div>
+
+    <!-- Sección Futura para historial académico, etc. -->
+    <h3 class="mt-4">Historial Académico</h3>
+    <p><i>(Próximamente: Listado de cursos, notas y asistencias)</i></p>
+
+</div>
+{% endblock %}
