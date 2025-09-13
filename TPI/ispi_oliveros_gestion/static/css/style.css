@@ -364,3 +364,84 @@ footer {
 .mt-4 {
   margin-top: 40px;
 }
+
+/* --- Estilos para Resumen Financiero --- */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 15px;
+}
+
+.summary-card {
+  padding: 20px;
+  border-radius: 5px;
+  color: white;
+  text-align: center;
+}
+
+.summary-card label {
+  display: block;
+  font-size: 1em;
+  margin-bottom: 5px;
+  opacity: 0.9;
+}
+
+.summary-card p {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 0;
+}
+
+.summary-card.total {
+  background-color: #17a2b8;
+}
+
+/* Azul */
+.summary-card.pagado {
+  background-color: #28a745;
+}
+
+/* Verde */
+.summary-card.saldo {
+  background-color: #dc3545;
+}
+
+/* Rojo */
+
+/* --- Estilos para Estados (Pendiente, Pagado, etc.) --- */
+.status {
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.8em;
+  font-weight: bold;
+  color: white;
+  text-transform: uppercase;
+}
+
+.status-pendiente {
+  background-color: #ffc107;
+  color: #333;
+}
+
+/* Amarillo */
+.status-pagado {
+  background-color: #28a745;
+}
+
+/* Verde */
+.status-vencido {
+  background-color: #dc3545;
+}
+
+/* Rojo */
+
+/* --- Botón Pequeño --- */
+.btn-primary-small {
+  background-color: #b30000;
+  color: white;
+  padding: 5px 10px;
+  font-size: 0.8em;
+  text-decoration: none;
+  border-radius: 5px;
+}

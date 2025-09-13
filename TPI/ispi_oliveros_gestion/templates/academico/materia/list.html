@@ -12,15 +12,24 @@
         <thead>
             <tr>
                 <th>Nombre</th>
-                <th>Año de cursado</th>
+                <th>Año</th>
+                <th>Modalidad</th>
+                <th>Cursos Activos</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for materia in materias %}
             <tr>
-                <td>{{ materia.nombre }}</td>
+                <td>
+                    <!-- Enlace a la lista de cursos de esta materia -->
+                    <a href="{% url 'academico:curso_list' materia_pk=materia.pk %}" title="Ver cursos de esta materia">
+                        <strong>{{ materia.nombre }}</strong>
+                    </a>
+                </td>
                 <td>{{ materia.anio_carrera }}°</td>
+                <td>{{ materia.get_modalidad_cursado_display }}</td>
+                <td>{{ materia.cursos.count }}</td>
                 <td>
                     <a href="{% url 'academico:materia_edit' pk=materia.pk %}">Editar</a> |
                     <a href="{% url 'academico:materia_delete' pk=materia.pk %}" class="text-danger">Eliminar</a>

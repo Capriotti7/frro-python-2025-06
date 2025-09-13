@@ -1,0 +1,11 @@
+<!-- templates/alumnos/alumno/form.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container form-container">
+    <h2>{% if form.instance.pk %}Editar Alumno{% else %}Agregar Nuevo Alumno{% endif %}</h2>
+    
+    {% include "alumnos/alumno/_form_fields.html" with submit_button_text=form.instance.pk|yesno:"Actualizar Alumno,Crear Alumno" %}
+</div>
+{% endblock %}

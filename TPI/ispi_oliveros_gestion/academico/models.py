@@ -20,8 +20,16 @@ class Carrera(models.Model):
         ("Curso", "Curso"),
     ]
 
+    YEAR_CHOICES = [
+        (1, "1 Año"),
+        (2, "2 Años"),
+        (3, "3 Años"),
+        (4, "4 Años"),
+        (5, "5 Años"),
+    ]
+
     nombre = models.CharField(max_length=150)
-    duracion_anios = models.IntegerField()
+    duracion_anios = models.IntegerField(choices=YEAR_CHOICES, default=3)
     tipo_titulacion = models.CharField(max_length=20, choices=TIPOS_TITULACION)
     resolucion_ministerial = models.CharField(max_length=100)
 
@@ -30,23 +38,48 @@ class Carrera(models.Model):
 
 
 class Materia(models.Model):
+    MODALIDADES = [
+        ("Anual", "Anual"),
+        ("1C", "1er Cuatrimestre"),
+        ("2C", "2do Cuatrimestre"),
+    ]
+
     nombre = models.CharField(max_length=150)
-    anio_carrera = models.IntegerField()  # ej: 1, 2, 3
+    anio_carrera = models.IntegerField()
     carrera = models.ForeignKey(Carrera, on_delete=models.CASCADE, related_name="materias")
+    modalidad_cursado = models.CharField(max_length=5, choices=MODALIDADES, default="1C")
 
     def __str__(self):
         return f"{self.nombre} ({self.carrera.nombre})"
 
 
 class Curso(models.Model):
+    DIAS_SEMANA = [
+        (1, "Lunes"),
+        (2, "Martes"),
+        (3, "Miércoles"),
+        (4, "Jueves"),
+        (5, "Viernes"),
+        (6, "Sábado"),
+    ]
+    
+    CUATRIMESTRES = [
+        (0, "Anual"),
+        (1, "1er Cuatrimestre"),
+        (2, "2do Cuatrimestre"),
+    ]
+
     ciclo_lectivo = models.IntegerField()
-    cuatrimestre = models.IntegerField()
-    horarios = models.CharField(max_length=200)
-    docente = models.ForeignKey(Docente, on_delete=models.CASCADE, related_name="cursos")
+    cuatrimestre = models.IntegerField(choices=CUATRIMESTRES, default=1)
+    docente = models.ForeignKey(Docente, on_delete=models.SET_NULL, null=True, blank=True, related_name="cursos")
     materia = models.ForeignKey(Materia, on_delete=models.CASCADE, related_name="cursos")
 
+    dia_cursado = models.IntegerField(choices=DIAS_SEMANA, default=1)
+    hora_inicio = models.TimeField()
+    hora_fin = models.TimeField()
+
     def __str__(self):
-        return f"{self.materia.nombre} - {self.ciclo_lectivo}/{self.cuatrimestre}"
+        return f"{self.materia.nombre} - {self.ciclo_lectivo}/{self.get_cuatrimestre_display()}"
 
 
 class InscripcionCurso(models.Model):

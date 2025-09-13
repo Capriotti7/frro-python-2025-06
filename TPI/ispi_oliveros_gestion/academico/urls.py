@@ -17,4 +17,10 @@ urlpatterns = [
     path('carreras/<int:carrera_pk>/materias/agregar/', views.materia_create_view, name='materia_add'),
     path('materias/<int:pk>/editar/', views.materia_update_view, name='materia_edit'),
     path('materias/<int:pk>/eliminar/', views.materia_delete_view, name='materia_delete'),
+
+    # URLs de Cursos (anidadas bajo una materia)
+    path('materias/<int:materia_pk>/cursos/', views.curso_list_view, name='curso_list'),
+    path('materias/<int:materia_pk>/cursos/agregar/', views.curso_create_view, name='curso_add'),
+    path('cursos/<int:pk>/editar/', views.curso_update_view, name='curso_edit'),
+    path('cursos/<int:pk>/eliminar/', views.curso_delete_view, name='curso_delete'),
 ]

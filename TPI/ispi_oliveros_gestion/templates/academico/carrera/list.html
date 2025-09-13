@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>Nombre</th>
-            <th>Duración (Años)</th>
+            <th>Duración</th>
             <th>Titulación</th>
             <th>Acciones</th>
         </tr>
@@ -26,7 +26,7 @@
                     <strong>{{ carrera.nombre }}</strong>
                 </a>
             </td>
-            <td>{{ carrera.duracion_anios }}</td>
+            <td>{{ carrera.get_duracion_anios_display }}</td>
             <td>{{ carrera.tipo_titulacion }}</td>
             <td>
                 <a href="{% url 'academico:carrera_edit' pk=carrera.pk %}">Editar</a> |

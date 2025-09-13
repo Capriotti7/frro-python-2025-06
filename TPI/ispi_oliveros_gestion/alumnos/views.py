@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Alumno 
 from .forms import AlumnoForm
+from finanzas.models import Deuda
 
 @login_required
 def alumno_list_view(request):
@@ -14,7 +15,7 @@ def alumno_list_view(request):
     context = {
         'alumnos': alumnos
     }
-    return render(request, 'alumnos/alumno_list.html', context)
+    return render(request, 'alumnos/alumno/list.html', context)
 
 @login_required
 def alumno_create_view(request):
@@ -30,7 +31,7 @@ def alumno_create_view(request):
     context = {
         'form': form
     }
-    return render(request, 'alumnos/alumno_form.html', context)
+    return render(request, 'alumnos/alumno/form.html', context)
 
 @login_required
 def alumno_update_view(request, pk):
@@ -50,7 +51,7 @@ def alumno_update_view(request, pk):
         'form': form,
         'alumno': alumno
     }
-    return render(request, 'alumnos/alumno_form_edit.html', context)
+    return render(request, 'alumnos/alumno/form.html', context)
 
 @login_required
 def alumno_delete_view(request, pk):
@@ -65,13 +66,26 @@ def alumno_delete_view(request, pk):
     context = {
         'alumno': alumno
     }
-    return render(request, 'alumnos/alumno_confirm_delete.html', context)
+    return render(request, 'alumnos/alumno/confirm_delete.html', context)
 
 @login_required
 def alumno_detail_view(request, pk):
     alumno = get_object_or_404(Alumno, pk=pk)
 
+    # --- LÓGICA FINANCIERA ---
+    # Obtenemos todas las deudas del alumno, ordenadas por la más reciente.
+    deudas = Deuda.objects.filter(alumno=alumno).order_by('fecha_vencimiento')
+    
+    # Calculamos los totales generales
+    total_adeudado = sum(d.monto for d in deudas)
+    total_pagado = sum(d.total_pagado for d in deudas)
+    saldo_total = total_adeudado - total_pagado
+
     context = {
         'alumno': alumno,
+        'deudas': deudas,
+        'total_adeudado': total_adeudado,
+        'total_pagado': total_pagado,
+        'saldo_total': saldo_total,
     }
-    return render(request, 'alumnos/alumno_detail.html', context)
+    return render(request, 'alumnos/alumno/detail.html', context)
