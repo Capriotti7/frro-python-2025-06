@@ -1,0 +1,36 @@
+<!-- templates/core/dashboard.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Panel de Gestión ISPI Oliveros</h2>
+    <p>¡Bienvenido, {{ user.first_name|default:user.username }}!</p>
+
+    <div class="dashboard-grid">
+        
+        <a href="{% url 'alumnos:alumno_list' %}" class="dashboard-card">
+            <h3>Gestionar Alumnos</h3>
+            <p class="stat-number">{{ alumnos_count }}</p>
+            <p>Alumnos registrados en el sistema.</p>
+        </a>
+        
+        <a href="{% url 'academico:carrera_list' %}" class="dashboard-card">
+            <h3>Gestionar Carreras y Materias</h3>
+            <p class="stat-number">{{ carreras_count }}</p>
+            <p>Carreras activas.</p>
+        </a>
+        
+        <a href="{% url 'finanzas:gestion_financiera' %}" class="dashboard-card">
+            <h3>Control Financiero</h3>
+            <p>Registrar pagos y ver estado de deudas.</p>
+        </a>
+        
+        <a href="#" class="dashboard-card">
+            <h3>Asistencias</h3>
+            <p>Tomar y consultar asistencias por curso.</p>
+        
+        </a>
+    </div>
+</div>
+{% endblock %} 

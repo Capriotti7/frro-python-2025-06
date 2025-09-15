@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="list-header">
+        <div>
+            <h2>Cursos de la Materia</h2>
+            <p style="margin:0; font-size: 1.2em; color: #555;"><strong>{{ materia.nombre }}</strong> ({{ materia.carrera.nombre }})</p>
+        </div>
+        <a href="{% url 'academico:curso_add' materia_pk=materia.pk %}" class="btn-primary">Agregar Curso</a>
+    </div>
+    <table class="table-list">
+        <thead>
+            <tr>
+                <th>Ciclo Lectivo</th>
+                <th>Cuatrimestre</th>
+                <th>Docente a Cargo</th>
+                <th>Horario</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for curso in cursos %}
+            <tr>
+                <td>{{ curso.ciclo_lectivo }}</td>
+                <td>{{ curso.get_cuatrimestre_display }}</td>
+                <td>{{ curso.docente|default:"-" }}</td>
+                <td>{{ curso.get_dia_cursado_display }} de {{ curso.hora_inicio|time:"H:i" }} a {{ curso.hora_fin|time:"H:i" }}</td>
+                <td>
+                    <a href="{% url 'academico:curso_edit' pk=curso.pk %}">Editar</a> |
+                    <a href="{% url 'academico:curso_delete' pk=curso.pk %}" class="text-danger">Eliminar</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No hay cursos registrados para esta materia.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="form-actions" style="margin-top: 20px;">
+      <a href="{% url 'academico:materia_list' carrera_pk=materia.carrera.pk %}" class="btn-secondary">← Volver a Materias</a>
+    </div>
+</div>
+{% endblock %}

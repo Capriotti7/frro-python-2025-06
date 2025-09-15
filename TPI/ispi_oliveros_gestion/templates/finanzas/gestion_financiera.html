@@ -1,0 +1,42 @@
+<!-- templates/finanzas/gestion_financiera.html -->
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2>Gestión Financiera</h2>
+    <p>Herramientas para la administración de finanzas del instituto.</p>
+
+    <div class="form-container mt-4">
+        <h3>Generador de Deudas Mensuales</h3>
+        <p>Esta herramienta creará un registro de deuda para todos los alumnos activos para el mes y concepto seleccionados.</p>
+        
+        <form action="{% url 'finanzas:generar_deudas' %}" method="post">
+            {% csrf_token %}
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <label for="id_concepto">Concepto de Pago</label>
+                    <select name="concepto" id="id_concepto" required>
+                        {% for concepto in conceptos %}
+                        <option value="{{ concepto.pk }}">{{ concepto.descripcion }} - ${{ concepto.monto_sugerido|floatformat:2 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="detail-item">
+                    <label for="id_mes">Mes Correspondiente</label>
+                    <input type="number" name="mes" id="id_mes" min="1" max="12" required>
+                </div>
+                <div class="detail-item">
+                    <label for="id_anio">Año Correspondiente</label>
+                    <input type="number" name="anio" id="id_anio" min="2024" max="2040" required>
+                </div>
+                <div class="detail-item">
+                    <label for="id_vencimiento">Fecha de Vencimiento</label>
+                    <input type="date" name="vencimiento" id="id_vencimiento" required>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-danger">Generar Deudas Masivamente</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

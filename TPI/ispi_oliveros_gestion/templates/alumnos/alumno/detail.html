@@ -1,0 +1,104 @@
+<!-- templates/alumnos/alumno_detail.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container detail-container">
+    <div class="detail-header">
+        <h2>Ficha del Alumno</h2>
+        <div class="header-actions">
+            <a href="{% url 'alumnos:alumno_edit' pk=alumno.pk %}" class="btn-primary">Editar Alumno</a>
+            <a href="{% url 'alumnos:alumno_list' %}" class="btn-secondary">Volver al Listado</a>
+        </div>
+    </div>
+
+    <h3>Datos Personales</h3>
+    <div class="detail-grid">
+        <div class="detail-item">
+            <label>Nombre Completo</label>
+            <p>{{ alumno.apellido }}, {{ alumno.nombre }}</p>
+        </div>
+        <div class="detail-item">
+            <label>DNI</label>
+            <p>{{ alumno.dni }}</p>
+        </div>
+        <div class="detail-item">
+            <label>Fecha de Nacimiento</label>
+            <p>{{ alumno.fecha_nacimiento|date:"d/m/Y" }}</p>
+        </div>
+        <div class="detail-item">
+            <label>Nacionalidad</label>
+            <p>{{ alumno.nacionalidad }}</p>
+        </div>
+    </div>
+
+    <h3>Datos de Contacto</h3>
+    <div class="detail-grid">
+        <div class="detail-item">
+            <label>Email</label>
+            <p>{{ alumno.email }}</p>
+        </div>
+        <div class="detail-item">
+            <label>Teléfono</label>
+            <p>{{ alumno.telefono|default:"No especificado" }}</p>
+        </div>
+        <div class="detail-item">
+            <label>Dirección</label>
+            <p>{{ alumno.direccion|default:"No especificado" }}, {{ alumno.localidad }}</p>
+        </div>
+    </div>
+
+    <!-- ================== SECCIÓN FINANCIERA ================== -->
+    <h3 class="mt-4">Estado de Cuenta</h3>
+    <!-- Tarjetas de Resumen -->
+    <div class="summary-grid">
+        <div class="summary-card total">
+            <label>Total Adeudado</label>
+            <p>${{ total_adeudado|floatformat:2 }}</p>
+        </div>
+        <div class="summary-card pagado">
+            <label>Total Pagado</label>
+            <p>${{ total_pagado|floatformat:2 }}</p>
+        </div>
+        <div class="summary-card saldo">
+            <label>Saldo Pendiente</label>
+            <p>${{ saldo_total|floatformat:2 }}</p>
+        </div>
+    </div>
+
+    <!-- Tabla de Deudas y Pagos -->
+        <table class="table-list mt-4">
+            <thead>
+                <tr>
+                    <th>Concepto</th>
+                    <th>Vencimiento</th>
+                    <th>Monto</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for deuda in deudas %}
+                <tr>
+                    <td>{{ deuda.concepto.descripcion }}</td>
+                    <td>{{ deuda.fecha_vencimiento|date:"d/m/Y" }}</td>
+                    <td>${{ deuda.monto|floatformat:2 }}</td>
+                    <td><span class="status status-{{ deuda.estado|lower }}">{{ deuda.estado }}</span></td>
+                    <td>
+                        <a href="{% url 'finanzas:registrar_pago' deuda_pk=deuda.pk %}" class="btn-primary-small">Registrar Pago</a> 
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">Este alumno no tiene deudas registradas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    <!-- Sección Futura para historial académico, etc. -->
+    <h3 class="mt-4">Historial Académico</h3>
+    <p><i>(Próximamente: Listado de cursos, notas y asistencias)</i></p>
+
+</div>
+{% endblock %}

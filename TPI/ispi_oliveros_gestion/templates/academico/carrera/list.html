@@ -1,0 +1,40 @@
+<!-- templates/academico/carrera_list.html -->
+
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+  <div class="list-header">
+      <h2>Listado de Carreras</h2>
+      <a href="{% url 'academico:carrera_add' %}" class="btn-primary">Agregar Carrera</a>
+  </div>
+
+  <table class="table-list">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Duración</th>
+            <th>Titulación</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for carrera in carreras %}
+        <tr>
+            <td>
+                <a href="{% url 'academico:materia_list' carrera_pk=carrera.pk %}" title="Ver materias de esta carrera">
+                    <strong>{{ carrera.nombre }}</strong>
+                </a>
+            </td>
+            <td>{{ carrera.get_duracion_anios_display }}</td>
+            <td>{{ carrera.tipo_titulacion }}</td>
+            <td>
+                <a href="{% url 'academico:carrera_edit' pk=carrera.pk %}">Editar</a> |
+                <a href="{% url 'academico:carrera_delete' pk=carrera.pk %}" class="text-danger">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

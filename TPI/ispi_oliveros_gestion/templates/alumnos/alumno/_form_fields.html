@@ -1,0 +1,13 @@
+<!-- templates/alumnos/_form_fields.html -->
+
+<form method="post">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <div class="form-actions">
+        <!-- Usamos una variable para el texto del botón -->
+        <button type="submit" class="btn-primary">{{ submit_button_text|default:"Guardar" }}</button>
+        <a href="{% url 'alumnos:alumno_list' %}" class="btn-secondary">Cancelar</a>
+    </div>
+</form>

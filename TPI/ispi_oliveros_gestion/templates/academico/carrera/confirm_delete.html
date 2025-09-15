@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container form-container">
+    <h2>Confirmar Eliminación</h2>
+    <p>¿Estás seguro de que deseas eliminar la carrera <strong>{{ carrera.nombre }}</strong>?</p>
+    <p class="text-danger"><strong>¡Atención!</strong> Esta acción también podría eliminar materias y cursos asociados.</p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-actions">
+            <button type="submit" class="btn-danger">Sí, eliminar</button>
+            <a href="{% url 'academico:carrera_list' %}" class="btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

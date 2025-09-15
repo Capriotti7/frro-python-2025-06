@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container form-container">
+    <h2>{% if carrera %}Editar Carrera{% else %}Agregar Nueva Carrera{% endif %}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">{% if carrera %}Actualizar{% else %}Guardar{% endif %}</button>
+            <a href="{% url 'academico:carrera_list' %}" class="btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
