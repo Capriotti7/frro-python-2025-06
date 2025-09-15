@@ -2,17 +2,23 @@
 
 
 class Auto:
-    """La clase auto tiene dos propiedades, precio y marca. La marca se define
-    obligatoriamente al construir la clase y siempre que se devuelve, se 
-    devuelve con la primer letra en mayúscula y no se puede modificar. El precio
-    puede modificarse pero cuando se muestra, se redondea a 2 decimales
-    
-    Restricción: Usar Properties
-    
-    Referencia: https://docs.python.org/3/library/functions.html#property"""
+    def __init__(self, nombre: str, precio: float = 0.0):
+        self._nombre = nombre
+        self._precio = precio
 
-    # Completar
+    @property
+    def nombre(self) -> str:
+        return self._nombre.capitalize() # Devuelve la primera letra
 
+    @property
+    def precio(self) -> float:
+        return round(self._precio, 2)
+    
+    @precio.setter
+    def precio(self, nuevo_precio: float) -> None:
+        if nuevo_precio < 0:
+            raise ValueError("El precio no puede ser negativo")
+        self._precio = nuevo_precio
 
 # NO MODIFICAR - INICIO
 auto = Auto("Ford", 12_875.456)
@@ -38,9 +44,26 @@ from dataclasses import dataclass
 @dataclass
 class Auto:
     """Re-Escribir utilizando DataClasses"""
+    _nombre: str
+    _precio: float = 0.0
 
-    # Completar
+    @property
+    def nombre(self) -> str:
+        return self._nombre.capitalize()
 
+    @nombre.setter
+    def nombre(self, nuevo_nombre: str):
+        raise AttributeError("No se puede modificar el nombre del auto")
+
+    @property
+    def precio(self) -> float:
+        return round(self._precio, 2)
+
+    @precio.setter
+    def precio(self, nuevo_precio: float):
+        if nuevo_precio < 0:
+            raise ValueError("El precio no puede ser negativo")
+        self._precio = nuevo_precio
 
 # NO MODIFICAR - INICIO
 auto = Auto("Ford", 12_875.456)

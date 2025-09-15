@@ -14,7 +14,7 @@ class Articulo:
 
 
 from copy import deepcopy
-
+from typing import List
 
 def actualizar_precio(articulos: List[Articulo], porcentaje: float) -> List[Articulo]:
     """Toma una lista de articulos y un porcentaje, al precio de cada articulo
@@ -24,7 +24,13 @@ def actualizar_precio(articulos: List[Articulo], porcentaje: float) -> List[Arti
     Hint: Usar deepcopy (https://docs.python.org/3/library/copy.html#copy.deepcopy)
     """
     
-    # Completar
+    copia_articulos = deepcopy(articulos)
+    
+    # Recorremos la copia y actualizamos los precios
+    for articulo in copia_articulos:
+        articulo.precio *= (1 + porcentaje / 100)
+    
+    return copia_articulos
 
 
 # NO MODIFICAR - INICIO
