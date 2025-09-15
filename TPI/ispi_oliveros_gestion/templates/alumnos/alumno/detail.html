@@ -85,8 +85,7 @@
                     <td>${{ deuda.monto|floatformat:2 }}</td>
                     <td><span class="status status-{{ deuda.estado|lower }}">{{ deuda.estado }}</span></td>
                     <td>
-                        <!-- Este botón lo activaremos en el próximo paso -->
-                        <a href="#" class="btn-primary-small">Registrar Pago</a>
+                        <a href="{% url 'finanzas:registrar_pago' deuda_pk=deuda.pk %}" class="btn-primary-small">Registrar Pago</a> 
                     </td>
                 </tr>
                 {% empty %}

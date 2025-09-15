@@ -1,0 +1,20 @@
+<!-- templates/finanzas/pago_form.html -->
+
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container form-container">
+    <h2>Registrar Pago</h2>
+    <p>Para la deuda de <strong>{{ deuda.concepto.descripcion }}</strong> del alumno <strong>{{ deuda.alumno.apellido }}, {{ deuda.alumno.nombre }}</strong>.</p>
+    <p>Saldo pendiente: <strong>${{ deuda.saldo|floatformat:2 }}</strong></p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Confirmar Pago</button>
+            <a href="{% url 'alumnos:alumno_detail' pk=deuda.alumno.pk %}" class="btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %} 

@@ -50,3 +50,16 @@ class Pago(models.Model):
 
     def __str__(self):
         return f"Pago de ${self.monto_pagado} para la deuda de {self.deuda.concepto}"
+    
+    # --- MÉTODO SAVE MEJORADO ---
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        deuda_asociada = self.deuda
+        if deuda_asociada.saldo <= 0:
+            deuda_asociada.estado = "Pagado"
+        else:
+            if deuda_asociada.estado == "Vencido":
+                 deuda_asociada.estado = "Pendiente"
+        
+        deuda_asociada.save()

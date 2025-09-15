@@ -28,7 +28,7 @@
                     <a href="{% url 'dashboard' %}" {% if request.resolver_match.url_name == 'dashboard' %}class="active"{% endif %}>Dashboard</a>
                     <a href="{% url 'alumnos:alumno_list' %}" {% if request.resolver_match.app_name == 'alumnos' %}class="active"{% endif %}>Alumnos</a>
                     <a href="{% url 'academico:carrera_list' %}" {% if request.resolver_match.app_name == 'academico' %}class="active"{% endif %}>Académico</a> 
-                    <a href="#">Finanzas</a>
+                    <a href="{% url 'finanzas:gestion_financiera' %}" {% if request.resolver_match.app_name == 'finanzas' %}class="active"{% endif %}>Finanzas</a> 
                     
                     <div class="user-menu">
                         <span>| Hola, {{ user.first_name|default:user.username }}</span>
