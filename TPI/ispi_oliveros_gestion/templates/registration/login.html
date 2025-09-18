@@ -1,12 +1,35 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-<div class="container" style="max-width: 500px; margin-top: 50px;">
-    <h2>Iniciar Sesión</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" style="background-color: #b30000; color: white; padding: 10px 15px; border: none; cursor: pointer;">Entrar</button>
-    </form>
+<div class="login-page">
+    <div class="login-card">
+        <div class="login-header">
+            <img src="{% static 'img/logo-FHO.png' %}" alt="Logo ISPI Oliveros" class="login-logo">
+            <h2>Acceso al Sistema</h2>
+        </div>
+
+        <form method="post" class="login-form">
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                <small class="error-text">{{ field.errors|striptags }}</small>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            {% if form.non_field_errors %}
+            <div class="form-group">
+                <small class="error-text">{{ form.non_field_errors|striptags }}</small>
+            </div>
+            {% endif %}
+
+            <button type="submit" class="btn-login">Ingresar</button>
+        </form>
+    </div>
 </div>
 {% endblock %}
