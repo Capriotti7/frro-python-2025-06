@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" style="text-align: center; padding: 50px 20px;">
+    <h1 style="font-size: 4em; color: #b30000;">Error 404</h1>
+    <h2>Página no encontrada</h2>
+    <p>La página que estás buscando no existe o fue movida.</p>
+    <a href="{% url 'home' %}" class="btn-primary" style="margin-top: 20px;">Volver al Inicio</a>
+</div>
+{% endblock %}

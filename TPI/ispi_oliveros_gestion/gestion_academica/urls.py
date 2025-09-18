@@ -1,6 +1,6 @@
 from django.contrib import admin
-from django.urls import path, include
-from web.views import home_view
+from django.urls import path, include, re_path
+from web.views import home_view, handle_not_found_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -15,4 +15,7 @@ urlpatterns = [
     path('gestion/alumnos/', include('alumnos.urls')),
     path('gestion/academico/', include('academico.urls')),
     path('gestion/finanzas/', include('finanzas.urls')),
+
+    # 3. Manejo de errores 404 con una vista personalizada
+    re_path(r'^.*$', handle_not_found_view, name='catch_all'),
 ]

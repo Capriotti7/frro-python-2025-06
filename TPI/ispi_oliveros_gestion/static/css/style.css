@@ -529,3 +529,40 @@ footer {
   color: #b30000;
   font-size: 0.9em;
 }
+
+/* ================== ERROR PAGE STYLES (404) ================== */
+.error-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 20px;
+  text-align: center;
+}
+
+.error-card {
+  max-width: 600px;
+}
+
+.error-code {
+  font-size: 6em;
+  font-weight: bold;
+  color: #b30000;
+  margin: 0;
+}
+
+.error-title {
+  font-size: 2em;
+  color: #333;
+  margin-top: 10px;
+}
+
+.error-message {
+  color: #555;
+  font-size: 1.1em;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+.error-button {
+  font-size: 1.1em;
+}
