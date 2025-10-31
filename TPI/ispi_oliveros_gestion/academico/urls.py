@@ -29,5 +29,20 @@ urlpatterns = [
     path('docentes/<int:pk>/editar/', views.docente_update_view, name='docente_edit'),
     path('docentes/<int:pk>/eliminar/', views.docente_delete_view, name='docente_delete'),
     path('materias/<int:materia_pk>/docentes/', views.docente_list_from_materia_view, name='docente_list_from_materia'),
-     path('materias/<int:materia_pk>/docentes/<int:pk>/eliminar/', views.docente_delete_from_materia_view, name='docente_delete_from_materia'),
+    path('materias/<int:materia_pk>/docentes/<int:pk>/eliminar/', views.docente_delete_from_materia_view, name='docente_delete_from_materia'),
+
+    # URL para la página de selección de cursos para un alumno
+    path('alumnos/<int:alumno_pk>/inscribir-a-curso/', views.curso_selection_list_view, name='curso_selection_list'),
+    
+    # URL para procesar la inscripción
+    path('inscribir-ejecutar/', views.inscribir_alumno_ejecutar_view, name='inscribir_ejecutar'),
+
+    # URL para la página de gestión de asistencias
+    path('cursos/<int:curso_pk>/asistencias/', views.gestionar_asistencias_view, name='gestionar_asistencias'),
+
+    # URL para ver el historial de asistencias de una inscripción
+    path('inscripciones/<int:inscripcion_pk>/asistencias/', views.ver_asistencias_view, name='ver_asistencias'),
+
+    # URL para la página de selección de cursos para asistencia
+    path('asistencias/seleccionar-curso/', views.asistencia_seleccion_curso_view, name='asistencia_seleccion_curso'),
 ]

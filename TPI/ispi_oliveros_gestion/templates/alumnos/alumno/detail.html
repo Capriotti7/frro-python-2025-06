@@ -7,8 +7,9 @@
     <div class="detail-header">
         <h2>Ficha del Alumno</h2>
         <div class="header-actions">
-            <a href="{% url 'alumnos:alumno_edit' pk=alumno.pk %}" class="btn-primary">Editar Alumno</a>
-            <a href="{% url 'alumnos:alumno_list' %}" class="btn-secondary">Volver al Listado</a>
+            <a href="{% url 'academico:curso_selection_list' alumno_pk=alumno.pk %}" class="btn-primary">Inscribir a Curso</a>
+            <a href="{% url 'alumnos:alumno_edit' pk=alumno.pk %}" class="btn-secondary">Editar Alumno</a>
+            <a href="{% url 'alumnos:alumno_list' %}" class="btn-secondary">Volver al Listado</a> 
         </div>
     </div>
 
@@ -98,7 +99,32 @@
 
     <!-- Sección Futura para historial académico, etc. -->
     <h3 class="mt-4">Historial Académico</h3>
-    <p><i>(Próximamente: Listado de cursos, notas y asistencias)</i></p>
+    <table class="table-list">
+            <thead>
+                <tr>
+                    <th>Curso</th>
+                    <th>Ciclo Lectivo</th>
+                    <th>Docente</th>
+                    <th>Nota Final</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for inscripcion in inscripciones %}
+                <tr>
+                    <td>{{ inscripcion.curso.materia.nombre }}</td>
+                    <td>{{ inscripcion.curso.ciclo_lectivo }}</td>
+                    <td>{{ inscripcion.curso.docente|default:"-" }}</td>
+                    <td>{{ inscripcion.nota_final|default:"-" }}</td>
+                    <td><a href="{% url 'academico:ver_asistencias' inscripcion_pk=inscripcion.pk %}" class="btn-primary-small">Ver Asistencias</a></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">Este alumno no está inscripto a ningún curso.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
 </div>
 {% endblock %}

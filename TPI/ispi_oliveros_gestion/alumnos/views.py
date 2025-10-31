@@ -6,8 +6,11 @@ from django.contrib.auth.decorators import login_required
 from .models import Alumno 
 from .forms import AlumnoForm
 from finanzas.models import Deuda
+from academico.models import InscripcionCurso
+from core.decorators import group_required
 
 @login_required
+@group_required('Administrativos')
 def alumno_list_view(request):
 
     alumnos = Alumno.objects.all().order_by('apellido', 'nombre')
@@ -18,6 +21,7 @@ def alumno_list_view(request):
     return render(request, 'alumnos/alumno/list.html', context)
 
 @login_required
+@group_required('Administrativos')
 def alumno_create_view(request):
     if request.method == 'POST':
         form = AlumnoForm(request.POST)
@@ -34,6 +38,7 @@ def alumno_create_view(request):
     return render(request, 'alumnos/alumno/form.html', context)
 
 @login_required
+@group_required('Administrativos')
 def alumno_update_view(request, pk):
 
     alumno = get_object_or_404(Alumno, pk=pk)
@@ -54,6 +59,7 @@ def alumno_update_view(request, pk):
     return render(request, 'alumnos/alumno/form.html', context)
 
 @login_required
+@group_required('Administrativos')
 def alumno_delete_view(request, pk):
     alumno = get_object_or_404(Alumno, pk=pk)
 
@@ -69,6 +75,7 @@ def alumno_delete_view(request, pk):
     return render(request, 'alumnos/alumno/confirm_delete.html', context)
 
 @login_required
+@group_required('Administrativos')
 def alumno_detail_view(request, pk):
     alumno = get_object_or_404(Alumno, pk=pk)
 
@@ -81,11 +88,16 @@ def alumno_detail_view(request, pk):
     total_pagado = sum(d.total_pagado for d in deudas)
     saldo_total = total_adeudado - total_pagado
 
+    # --- LÓGICA ACADÉMICA ---
+    inscripciones = InscripcionCurso.objects.filter(alumno=alumno).order_by('-curso__ciclo_lectivo')
+
     context = {
         'alumno': alumno,
         'deudas': deudas,
         'total_adeudado': total_adeudado,
         'total_pagado': total_pagado,
         'saldo_total': saldo_total,
+        'inscripciones': inscripciones,
     }
+
     return render(request, 'alumnos/alumno/detail.html', context)

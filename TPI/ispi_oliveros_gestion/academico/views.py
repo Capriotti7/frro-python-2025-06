@@ -3,8 +3,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Carrera, Materia, Curso, Docente
+from alumnos.models import Alumno
+from .models import Carrera, Materia, Curso, Docente, InscripcionCurso, Asistencia
+from django.utils import timezone
 from .forms import CarreraForm, MateriaForm, CursoForm, DocenteForm
+from core.decorators import group_required
 
 
 # --- VISTAS PARA CARRERA ---
@@ -258,3 +261,127 @@ def docente_delete_from_materia_view(request, pk, materia_pk):
     }
     # Reutilizamos la misma plantilla de confirmación
     return render(request, 'academico/docente/confirm_delete.html', context)
+
+# --- VISTAS PARA INSCRIPCIONES A CURSOS ---
+@login_required
+def curso_selection_list_view(request, alumno_pk):
+    alumno = get_object_or_404(Alumno, pk=alumno_pk)
+    
+    # Obtenemos los IDs de los cursos en los que el alumno YA está inscripto.
+    cursos_inscrito_ids = InscripcionCurso.objects.filter(alumno=alumno).values_list('curso__id', flat=True)
+    
+    # Obtenemos todos los cursos disponibles, EXCLUYENDO aquellos en los que ya está inscripto.
+    cursos_disponibles = Curso.objects.exclude(id__in=cursos_inscrito_ids).order_by('-ciclo_lectivo', 'materia__nombre')
+    
+    context = {
+        'alumno': alumno,
+        'cursos': cursos_disponibles,
+    }
+    return render(request, 'academico/inscripcion/curso_selection_list.html', context)
+
+@login_required
+def inscribir_alumno_ejecutar_view(request):
+    if request.method == 'POST':
+        alumno_pk = request.POST.get('alumno_pk')
+        curso_pk = request.POST.get('curso_pk')
+        
+        alumno = get_object_or_404(Alumno, pk=alumno_pk)
+        curso = get_object_or_404(Curso, pk=curso_pk)
+        
+        # Regla de Negocio: Verificar si ya existe la inscripción
+        if InscripcionCurso.objects.filter(alumno=alumno, curso=curso).exists():
+            messages.error(request, f'Error|El alumno ya se encuentra inscripto en el curso de {curso.materia.nombre}.')
+        else:
+            InscripcionCurso.objects.create(alumno=alumno, curso=curso)
+            messages.success(request, f'Inscripción Exitosa|Se ha inscripto a {alumno.apellido}, {alumno.nombre} en el curso de {curso.materia.nombre}.')
+            
+        return redirect('alumnos:alumno_detail', pk=alumno.pk)
+    
+    # Si no es POST, redirigir a algún lugar seguro, como el dashboard.
+    return redirect('dashboard')
+
+# --- VISTAS PARA GESTIÓN DE ASISTENCIAS ---
+@login_required
+@group_required('Administrativos', 'Docentes')
+def gestionar_asistencias_view(request, curso_pk):
+    curso = get_object_or_404(Curso, pk=curso_pk)
+    
+    # Obtener la fecha de la URL (si se proveyó) o usar la de hoy
+    fecha_str = request.GET.get('fecha', timezone.now().strftime('%Y-%m-%d'))
+    fecha = timezone.datetime.strptime(fecha_str, '%Y-%m-%d').date()
+
+    if request.method == 'POST':
+        # --- LÓGICA DE GUARDADO ---
+        for inscripcion in curso.inscripciones.all():
+            estado = request.POST.get(f'asistencia-{inscripcion.pk}')
+            if estado:
+                # update_or_create: busca una asistencia para este día/inscripción
+                # si la encuentra, la actualiza; si no, la crea. ¡Mágico!
+                Asistencia.objects.update_or_create(
+                    inscripcion=inscripcion,
+                    fecha_clase=fecha,
+                    defaults={'estado': estado}
+                )
+        messages.success(request, f'Guardado|Se guardó la asistencia para el día {fecha.strftime("%d/%m/%Y")}.')
+        return redirect('academico:gestionar_asistencias', curso_pk=curso.pk)
+
+    # --- LÓGICA DE CARGA DE PÁGINA ---
+    inscripciones = curso.inscripciones.all().select_related('alumno').order_by('alumno__apellido', 'alumno__nombre')
+    
+    # Obtenemos las asistencias ya guardadas para este día para pre-marcar los botones
+    asistencias_del_dia = Asistencia.objects.filter(inscripcion__in=inscripciones, fecha_clase=fecha)
+    
+    # Creamos un diccionario para buscar fácilmente el estado de cada alumno en el template
+    estado_asistencia = {asistencia.inscripcion.pk: asistencia.estado for asistencia in asistencias_del_dia}
+    
+    context = {
+        'curso': curso,
+        'inscripciones': inscripciones,
+        'fecha': fecha,
+        'estado_asistencia': estado_asistencia,
+    }
+    return render(request, 'academico/asistencia/gestionar.html', context)
+
+@login_required
+@group_required('Administrativos', 'Docentes')
+def asistencia_seleccion_curso_view(request):
+    # En el futuro, si un docente inicia sesión, podríamos mostrar solo SUS cursos.
+    # if request.user.groups.filter(name='Docentes').exists():
+    #     cursos = Curso.objects.filter(docente=request.user.docente_profile)
+    # else:
+    #     cursos = Curso.objects.all()
+    
+    # Por ahora, mostramos todos los cursos del ciclo lectivo actual.
+    current_year = timezone.now().year
+    cursos = Curso.objects.filter(ciclo_lectivo=current_year).order_by('materia__nombre')
+    
+    context = {
+        'cursos': cursos,
+    }
+    return render(request, 'academico/asistencia/seleccion_curso.html', context)
+
+# --- VISTA PARA VER HISTORIAL DE ASISTENCIAS ---
+@login_required
+def ver_asistencias_view(request, inscripcion_pk):
+    inscripcion = get_object_or_404(InscripcionCurso, pk=inscripcion_pk)
+    asistencias = Asistencia.objects.filter(inscripcion=inscripcion).order_by('fecha_clase')
+    
+    # --- Cálculos para el Resumen ---
+    total_clases = asistencias.count()
+    presentes = asistencias.filter(estado='Presente').count()
+    ausentes = asistencias.filter(estado='Ausente').count()
+    justificados = asistencias.filter(estado='Justificado').count()
+    
+    # Calculamos el porcentaje de asistencia (evitando división por cero)
+    porcentaje_asistencia = (presentes / total_clases * 100) if total_clases > 0 else 0
+    
+    context = {
+        'inscripcion': inscripcion,
+        'asistencias': asistencias,
+        'total_clases': total_clases,
+        'presentes': presentes,
+        'ausentes': ausentes,
+        'justificados': justificados,
+        'porcentaje_asistencia': porcentaje_asistencia,
+    }
+    return render(request, 'academico/asistencia/ver_historial.html', context)

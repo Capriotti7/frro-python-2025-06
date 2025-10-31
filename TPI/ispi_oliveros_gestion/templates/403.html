@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container error-page-container">
+    <div class="error-card">
+        <h1 class="error-code">403</h1>
+        <h2 class="error-title">Acceso Denegado</h2>
+        <p class="error-message">No tienes los permisos necesarios para acceder a esta página. Si crees que esto es un error, por favor contacta al administrador.</p>
+        <a href="{% url 'dashboard' %}" class="btn-primary error-button">Volver al Dashboard</a>
+    </div>
+</div>
+{% endblock %}

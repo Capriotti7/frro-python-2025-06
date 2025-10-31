@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Deuda
-from .forms import PagoForm
+from .forms import PagoForm, ConceptoPagoForm
 from academico.models import Curso # Necesitaremos esto más adelante
 from .models import ConceptoPago # Y esto para el formulario
 from .services import generar_deudas_mensuales
@@ -53,3 +53,43 @@ def generar_deudas_view(request):
         messages.success(request, f'Proceso completado: {creadas} deudas nuevas generadas. {omitidas} alumnos ya tenían una deuda para este período y fueron omitidos.')
     
     return redirect('finanzas:gestion_financiera')
+
+# --- VISTAS PARA CONCEPTO DE PAGO ---
+@login_required
+def concepto_pago_list_view(request):
+    conceptos = ConceptoPago.objects.all().order_by('descripcion')
+    return render(request, 'finanzas/concepto/list.html', {'conceptos': conceptos})
+
+@login_required
+def concepto_pago_create_view(request):
+    if request.method == 'POST':
+        form = ConceptoPagoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Concepto de Pago Creado|El nuevo concepto ha sido guardado.')
+            return redirect('finanzas:concepto_pago_list')
+    else:
+        form = ConceptoPagoForm()
+    return render(request, 'finanzas/concepto/form.html', {'form': form})
+
+@login_required
+def concepto_pago_update_view(request, pk):
+    concepto = get_object_or_404(ConceptoPago, pk=pk)
+    if request.method == 'POST':
+        form = ConceptoPagoForm(request.POST, instance=concepto)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Concepto de Pago Actualizado|Los cambios han sido guardados.')
+            return redirect('finanzas:concepto_pago_list')
+    else:
+        form = ConceptoPagoForm(instance=concepto)
+    return render(request, 'finanzas/concepto/form.html', {'form': form, 'concepto': concepto})
+
+@login_required
+def concepto_pago_delete_view(request, pk): 
+    concepto = get_object_or_404(ConceptoPago, pk=pk)
+    if request.method == 'POST':
+        concepto.delete()
+        messages.success(request, 'Concepto de Pago Eliminado|El concepto ha sido eliminado exitosamente.')
+        return redirect('finanzas:concepto_pago_list')
+    return render(request, 'finanzas/concepto/confirm_delete.html', {'concepto': concepto})

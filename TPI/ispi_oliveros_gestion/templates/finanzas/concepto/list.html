@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <div class="list-header">
+      <h2>Listado de Conceptos</h2>
+      <a href="{% url 'finanzas:concepto_add' %}" class="btn-primary">Agregar Concepto</a>
+  </div>
+
+  <table class="table-list">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for concepto in conceptos %}
+        <tr>
+            <td>
+                <strong>{{ concepto.nombre }}</strong>
+            </td>
+            <td>{{ concepto.descripcion }}</td>
+            <td>
+                <a href="{% url 'finanzas:concepto_edit' pk=concepto.pk %}">Editar</a> |
+                <a href="{% url 'finanzas:concepto_delete' pk=concepto.pk %}" class="text-danger">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

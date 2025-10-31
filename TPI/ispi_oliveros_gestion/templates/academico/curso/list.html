@@ -26,7 +26,8 @@
                 <td>{{ curso.docente|default:"-" }}</td>
                 <td>{{ curso.get_dia_cursado_display }} de {{ curso.hora_inicio|time:"H:i" }} a {{ curso.hora_fin|time:"H:i" }}</td>
                 <td>
-                    <a href="{% url 'academico:curso_edit' pk=curso.pk %}">Editar</a> |
+                    <a href="{% url 'academico:gestionar_asistencias' curso_pk=curso.pk %}" class="btn-primary-small">Asistencias</a>
+                    <a href="{% url 'academico:curso_edit' pk=curso.pk %}" class="text-secondary">Editar</a> |
                     <a href="{% url 'academico:curso_delete' pk=curso.pk %}" class="text-danger">Eliminar</a>
                 </td>
             </tr>

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container form-container">
+  <h2>{% if concepto %}Editar Concepto{% else %}Agregar Nuevo Concepto{% endif %}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">{% if concepto %}Actualizar{% else %}Guardar{% endif %}</button>
+      <a href="{% url 'finanzas:concepto_list' %}" class="btn-secondary">Cancelar</a>
+    </div>
+</div>
+{% endblock %}

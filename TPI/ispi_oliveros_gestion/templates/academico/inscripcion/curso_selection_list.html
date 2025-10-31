@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="list-header">
+        <div>
+            <h2>Inscribir a Curso</h2>
+            <p style="margin:0; font-size: 1.2em; color: #555;">Alumno: <strong>{{ alumno.apellido }}, {{ alumno.nombre }}</strong></p>
+        </div>
+    </div>
+    <table class="table-list">
+        <thead>
+            <tr>
+                <th>Materia</th>
+                <th>Ciclo Lectivo</th>
+                <th>Docente</th>
+                <th>Horario</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for curso in cursos %}
+            <tr>
+                <td>{{ curso.materia.nombre }}</td>
+                <td>{{ curso.ciclo_lectivo }}</td>
+                <td>{{ curso.docente|default:"-" }}</td>
+                <td>{{ curso.get_dia_cursado_display }} de {{ curso.hora_inicio|time:"H:i" }} a {{ curso.hora_fin|time:"H:i" }}</td>
+                <td>
+                    <!-- Usamos un formulario para enviar la inscripción vía POST -->
+                    <form action="{% url 'academico:inscribir_ejecutar' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="alumno_pk" value="{{ alumno.pk }}">
+                        <input type="hidden" name="curso_pk" value="{{ curso.pk }}">
+                        <button type="submit" class="btn-primary-small">Inscribir</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No hay más cursos disponibles para inscribir a este alumno.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="form-actions" style="margin-top: 20px;">
+        <a href="{% url 'alumnos:alumno_detail' pk=alumno.pk %}" class="btn-secondary">← Volver a la Ficha del Alumno</a>
+    </div>
+</div>
+{% endblock %}

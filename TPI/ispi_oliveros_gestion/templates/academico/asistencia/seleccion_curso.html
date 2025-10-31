@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="list-header">
+        <div>
+            <h2>Seleccionar Curso para Asistencia</h2>
+            <p style="margin:0; font-size: 1.2em; color: #555;">
+                Mostrando cursos del ciclo lectivo actual.
+            </p>
+        </div>
+    </div>
+
+    <table class="table-list">
+        <thead>
+            <tr>
+                <th>Materia</th>
+                <th>Docente</th>
+                <th>Horario</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for curso in cursos %}
+            <tr>
+                <td>{{ curso.materia.nombre }}</td>
+                <td>{{ curso.docente|default:"-" }}</td>
+                <td>{{ curso.get_dia_cursado_display }} de {{ curso.hora_inicio|time:"H:i" }} a {{ curso.hora_fin|time:"H:i" }}</td>
+                <td>
+                    <a href="{% url 'academico:gestionar_asistencias' curso_pk=curso.pk %}" class="btn-primary">Tomar Asistencia</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4">No hay cursos activos registrados para el ciclo lectivo actual.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="form-actions" style="margin-top: 20px;">
+      <a href="{% url 'dashboard' %}" class="btn-secondary">← Volver al Dashboard</a>
+    </div>
+</div>
+{% endblock %}

@@ -86,7 +86,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ispi_oliveros_db',
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': 'administrador',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -137,3 +137,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'dashboard' # El 'name' de la URL del dashboard
 LOGOUT_REDIRECT_URL = 'home'     # A dónde ir después de cerrar sesión
 LOGIN_URL = 'login'              # El nombre de la URL de login
+
+# Esto le dice a Django que no muestre la página de error 403 por defecto
+# si estamos en modo DEBUG.
+# En producción, Django usará automáticamente tu 403.html.

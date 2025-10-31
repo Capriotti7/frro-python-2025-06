@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="list-header">
+        <div>
+            <h2>Historial de Asistencias</h2>
+            <p style="margin:0; font-size: 1.2em; color: #555;">
+                <strong>{{ inscripcion.alumno.apellido }}, {{ inscripcion.alumno.nombre }}</strong> en 
+                <strong>{{ inscripcion.curso.materia.nombre }}</strong> ({{ inscripcion.curso.ciclo_lectivo }})
+            </p>
+        </div>
+    </div>
+
+    <!-- Tarjetas de Resumen -->
+    <div class="summary-grid">
+        <div class="summary-card total">
+            <label>Porcentaje de Asistencia</label>
+            <p>{{ porcentaje_asistencia|floatformat:2 }}%</p>
+        </div>
+        <div class="summary-card pagado">
+            <label>Presentes</label>
+            <p>{{ presentes }} / {{ total_clases }}</p>
+        </div>
+        <div class="summary-card saldo">
+            <label>Ausentes</label>
+            <p>{{ ausentes }}</p>
+        </div>
+    </div>
+
+    <!-- Tabla de Detalle -->
+    <table class="table-list mt-4">
+        <thead>
+            <tr>
+                <th>Fecha de Clase</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for asistencia in asistencias %}
+            <tr>
+                <td>{{ asistencia.fecha_clase|date:"d/m/Y" }}</td>
+                <td><span class="status status-{{ asistencia.estado|lower }}">{{ asistencia.estado }}</span></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="2">No hay registros de asistencia para este curso.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="form-actions" style="margin-top: 20px;">
+      <a href="{% url 'alumnos:alumno_detail' pk=inscripcion.alumno.pk %}" class="btn-secondary">← Volver a la Ficha del Alumno</a>
+    </div>
+</div>
+{% endblock %}
