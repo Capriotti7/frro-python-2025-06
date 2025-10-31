@@ -1,7 +1,7 @@
 # academico/forms.py
 
 from django import forms
-from .models import Carrera, Materia, Curso
+from .models import Carrera, Materia, Curso, Docente
 import datetime
 
 class CarreraForm(forms.ModelForm):
@@ -42,4 +42,16 @@ class CursoForm(forms.ModelForm):
         widgets = {
             'hora_inicio': forms.TimeInput(attrs={'type': 'time'}),
             'hora_fin': forms.TimeInput(attrs={'type': 'time'}),
+        }
+
+class DocenteForm(forms.ModelForm):
+    class Meta:
+        model = Docente
+        fields = ['dni', 'nombre', 'apellido', 'email', 'telefono']
+        widgets = {
+            'dni': forms.TextInput(attrs={'placeholder': 'Ej: 12345678'}),
+            'nombre': forms.TextInput(attrs={'placeholder': 'Nombre completo'}),
+            'apellido': forms.TextInput(attrs={'placeholder': 'Apellido(s)'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'correo@ejemplo.com'}),
+            'telefono': forms.TextInput(attrs={'placeholder': 'Ej: 3415123456'}),
         }

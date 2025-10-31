@@ -23,4 +23,11 @@ urlpatterns = [
     path('materias/<int:materia_pk>/cursos/agregar/', views.curso_create_view, name='curso_add'),
     path('cursos/<int:pk>/editar/', views.curso_update_view, name='curso_edit'),
     path('cursos/<int:pk>/eliminar/', views.curso_delete_view, name='curso_delete'),
+
+    path('docentes/', views.docente_list_view, name='docente_list'),
+    path('docentes/agregar/', views.docente_create_view, name='docente_add'),
+    path('docentes/<int:pk>/editar/', views.docente_update_view, name='docente_edit'),
+    path('docentes/<int:pk>/eliminar/', views.docente_delete_view, name='docente_delete'),
+    path('materias/<int:materia_pk>/docentes/', views.docente_list_from_materia_view, name='docente_list_from_materia'),
+     path('materias/<int:materia_pk>/docentes/<int:pk>/eliminar/', views.docente_delete_from_materia_view, name='docente_delete_from_materia'),
 ]

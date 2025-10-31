@@ -3,8 +3,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Carrera, Materia, Curso
-from .forms import CarreraForm, MateriaForm, CursoForm
+from .models import Carrera, Materia, Curso, Docente
+from .forms import CarreraForm, MateriaForm, CursoForm, DocenteForm
 
 
 # --- VISTAS PARA CARRERA ---
@@ -109,8 +109,13 @@ def materia_delete_view(request, pk):
 def curso_list_view(request, materia_pk):
     materia = get_object_or_404(Materia, pk=materia_pk)
     cursos = Curso.objects.filter(materia=materia).order_by('-ciclo_lectivo', 'cuatrimestre')
-    context = {'materia': materia, 'cursos': cursos}
+    docentes_disponibles = Docente.objects.all().order_by('apellido', 'nombre')
+    context = {
+        'materia': materia,
+        'cursos': cursos,
+        'docentes_disponibles': docentes_disponibles,}
     return render(request, 'academico/curso/list.html', context)
+
 
 @login_required
 def curso_create_view(request, materia_pk):
@@ -152,3 +157,104 @@ def curso_delete_view(request, pk):
         return redirect('academico:curso_list', materia_pk=materia_pk)
     context = {'curso': curso}
     return render(request, 'academico/curso/confirm_delete.html', context)
+
+# --- VISTAS PARA DOCENTE ---
+@login_required
+def docente_list_view(request):
+    docentes = Docente.objects.all().order_by('apellido', 'nombre')
+    context = {'docentes': docentes}
+    materia_id = request.GET.get('from_materia')
+    if materia_id:
+        try:
+            # Buscamos la materia y la añadimos al contexto
+            materia_origen = get_object_or_404(Materia, pk=materia_id)
+            context['materia_origen'] = materia_origen
+        except (ValueError, TypeError):
+            # Si el ID no es válido, simplemente no hacemos nada
+            pass
+    return render(request, 'academico/docente/list.html', context)
+
+@login_required
+def docente_list_from_materia_view(request, materia_pk):
+    # 1. Obtenemos la materia desde la que venimos, gracias a la URL
+    materia = get_object_or_404(Materia, pk=materia_pk)
+    
+    # 2. Obtenemos la lista de TODOS los docentes del sistema
+    docentes = Docente.objects.all().order_by('apellido', 'nombre')
+    
+    # 3. Preparamos y enviamos los datos a una NUEVA plantilla
+    context = {
+        'materia': materia,
+        'docentes': docentes
+    }
+    return render(request, 'academico/docente/list_from_materia.html', context)
+
+
+@login_required
+@login_required
+def docente_create_view(request):
+    # Leemos la "pista" de la URL, tanto si es GET (al cargar) como si es POST (al enviar)
+    materia_pk_origen = request.POST.get('from_materia') or request.GET.get('from_materia')
+
+    if request.method == 'POST':
+        form = DocenteForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'El docente ha sido agregado exitosamente.')
+
+            # Si teníamos la "pista", volvemos a la lista de docentes de esa materia
+            if materia_pk_origen:
+                return redirect('academico:docente_list_from_materia', materia_pk=materia_pk_origen)
+            else:
+                # Si no, volvemos a la lista general (comportamiento original)
+                return redirect('academico:docente_list')
+    else:
+        form = DocenteForm()
+        
+    context = {
+        'form': form,
+        'materia_pk_origen': materia_pk_origen, # Pasamos la "pista" a la plantilla del formulario
+    }
+    return render(request, 'academico/docente/form.html', context)
+
+@login_required
+def docente_update_view(request, pk):
+    docente = get_object_or_404(Docente, pk=pk)
+    if request.method == 'POST':
+        form = DocenteForm(request.POST, instance=docente)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'El docente ha sido actualizado exitosamente.')
+            return redirect('academico:docente_list')
+    else:
+        form = DocenteForm(instance=docente)
+    context = {'form': form, 'docente': docente}
+    return render(request, 'academico/docente/form.html', context)
+
+@login_required
+def docente_delete_view(request, pk):
+    docente = get_object_or_404(Docente, pk=pk)
+    if request.method == 'POST':
+        docente.delete()
+        messages.success(request, 'El docente ha sido eliminado.')
+        return redirect('academico:docente_list')
+    context = {'docente': docente}
+    return render(request, 'academico/docente/confirm_delete.html', context)
+
+@login_required
+def docente_delete_from_materia_view(request, pk, materia_pk):
+    docente = get_object_or_404(Docente, pk=pk)
+    materia = get_object_or_404(Materia, pk=materia_pk) # También obtenemos la materia
+
+    if request.method == 'POST':
+        docente.delete()
+        messages.success(request, 'El docente ha sido eliminado.')
+        # ¡LA LÍNEA CLAVE! Redirige de vuelta a la lista de docentes de la materia
+        return redirect('academico:docente_list_from_materia', materia_pk=materia.pk)
+    
+    context = {
+        'docente': docente,
+        'materia': materia  # Pasamos la materia a la plantilla de confirmación
+    }
+    # Reutilizamos la misma plantilla de confirmación
+    return render(request, 'academico/docente/confirm_delete.html', context)

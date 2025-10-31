@@ -38,5 +38,49 @@
     <div class="form-actions" style="margin-top: 20px;">
       <a href="{% url 'academico:materia_list' carrera_pk=materia.carrera.pk %}" class="btn-secondary">← Volver a Materias</a>
     </div>
+
+
+<div class="header-bar">
+        <h2>Docentes Disponibles para Asignar</h2>
+        <a href="{% url 'academico:docente_list_from_materia' materia_pk=materia.pk %}" class="btn-primary">Gestionar Plantel Docente</a>
+    </div>
+
+    <table class="table-list">
+        <thead>
+            <tr>
+                <th>Apellido y Nombre</th>
+                <th>DNI</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for docente in docentes_disponibles %}
+            <tr>
+                <td>{{ docente.apellido }}, {{ docente.nombre }}</td>
+                <td>{{ docente.dni }}</td>
+                <td>{{ docente.email }}</td>
+                <td>{{ docente.telefono|default:"-" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">
+                    No hay docentes registrados en el sistema. <a href="{% url 'academico:docente_add' %}">Agrega el primero</a>.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="form-actions" style="margin-top: 20px;">
+      <a href="{% url 'academico:materia_list' carrera_pk=materia.carrera.pk %}" class="btn-secondary">← Volver a Materias</a>
+    </div>
+
 </div>
+
+</div>
+
+
+
 {% endblock %}
+
