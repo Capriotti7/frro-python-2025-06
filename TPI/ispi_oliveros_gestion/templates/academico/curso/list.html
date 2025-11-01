@@ -21,7 +21,7 @@
         <tbody>
             {% for curso in cursos %}
             <tr>
-                <td>{{ curso.ciclo_lectivo }}</td>
+                <td><a href="{% url 'academico:curso_detail' curso_pk=curso.pk %}">{{ curso.ciclo_lectivo }}</a></td>
                 <td>{{ curso.get_cuatrimestre_display }}</td>
                 <td>{{ curso.docente|default:"-" }}</td>
                 <td>{{ curso.get_dia_cursado_display }} de {{ curso.hora_inicio|time:"H:i" }} a {{ curso.hora_fin|time:"H:i" }}</td>

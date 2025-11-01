@@ -8,6 +8,9 @@ from .models import Carrera, Materia, Curso, Docente, InscripcionCurso, Asistenc
 from django.utils import timezone
 from .forms import CarreraForm, MateriaForm, CursoForm, DocenteForm
 from core.decorators import group_required
+from django.db.models import Q
+from django.views.decorators.http import require_POST
+
 
 
 # --- VISTAS PARA CARRERA ---
@@ -385,3 +388,59 @@ def ver_asistencias_view(request, inscripcion_pk):
         'porcentaje_asistencia': porcentaje_asistencia,
     }
     return render(request, 'academico/asistencia/ver_historial.html', context)
+
+@login_required
+def curso_detail_view(request, curso_pk):
+    curso = get_object_or_404(Curso, pk=curso_pk)
+    # Buscamos todas las inscripciones para este curso
+    inscripciones = InscripcionCurso.objects.filter(curso=curso).order_by('alumno__apellido', 'alumno__nombre')
+    
+    context = {
+        'curso': curso,
+        'inscripciones': inscripciones
+    }
+    return render(request, 'academico/curso/detail.html', context)
+
+
+@login_required
+def curso_inscribir_alumno_list_view(request, curso_pk):
+    curso = get_object_or_404(Curso, pk=curso_pk)
+
+    # 1. Obtener los IDs de los alumnos que YA están inscriptos en este curso
+    alumnos_inscriptos_ids = InscripcionCurso.objects.filter(curso=curso).values_list('alumno_id', flat=True)
+
+    # 2. Obtener todos los alumnos EXCLUYENDO a los que ya están inscriptos
+    alumnos_disponibles = Alumno.objects.exclude(id__in=alumnos_inscriptos_ids)
+
+    # 3. Lógica de Búsqueda por DNI
+    search_dni = request.GET.get('dni_search', '') # '' es el valor por defecto
+    if search_dni:
+        alumnos_disponibles = alumnos_disponibles.filter(dni__icontains=search_dni)
+
+    context = {
+        'curso': curso,
+        'alumnos': alumnos_disponibles,
+        'search_dni': search_dni, # Para mantener el valor en la barra de búsqueda
+    }
+    return render(request, 'academico/curso/inscribir_list.html', context)
+
+@require_POST # Asegura que esta vista solo se pueda llamar con un método POST
+@login_required
+def curso_inscribir_alumno_action_view(request, curso_pk, alumno_pk):
+    curso = get_object_or_404(Curso, pk=curso_pk)
+    alumno = get_object_or_404(Alumno, pk=alumno_pk)
+
+    # Usamos get_or_create para evitar inscribir al mismo alumno dos veces.
+    # Si ya existe, no hace nada. Si no existe, lo crea.
+    inscripcion, created = InscripcionCurso.objects.get_or_create(
+        curso=curso,
+        alumno=alumno
+    )
+
+    if created:
+        messages.success(request, f'El alumno {alumno} ha sido inscripto exitosamente.')
+    else:
+        messages.warning(request, f'El alumno {alumno} ya se encontraba inscripto en este curso.')
+
+    # Redirigimos de vuelta a la página de búsqueda e inscripción
+    return redirect('academico:curso_inscribir_alumno_list', curso_pk=curso.pk)

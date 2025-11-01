@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="breadcrumb">
+        <a href="{% url 'academico:carrera_list' %}">Carreras</a> &raquo;
+        <a href="{% url 'academico:materia_list' curso.materia.carrera.pk %}">{{ curso.materia.carrera.nombre }}</a> &raquo;
+        <a href="{% url 'academico:curso_list' materia_pk=curso.materia.pk %}">Cursos de {{ curso.materia.nombre }}</a> &raquo;
+        <span>Detalle del Curso</span>
+    </div>
+
+    <!-- SECCIÓN DE DETALLES DEL CURSO -->
+    <div class="header-bar">
+        <h2>Detalles del Curso</h2>
+    </div>
+    <p><strong>Materia:</strong> {{ curso.materia.nombre }}</p>
+    <p><strong>Ciclo Lectivo:</strong> {{ curso.ciclo_lectivo }} ({{ curso.get_cuatrimestre_display }})</p>
+    <p><strong>Docente:</strong> {{ curso.docente|default:"Sin asignar" }}</p>
+    <p><strong>Horario:</strong> {{ curso.get_dia_cursado_display }} de {{ curso.hora_inicio|time:"H:i" }} a {{ curso.hora_fin|time:"H:i" }}</p>
+
+    <hr style="margin: 40px 0;">
+
+    <!-- SECCIÓN DE ALUMNOS INSCRIPTOS -->
+    <div class="header-bar">
+        <h2>Alumnos Inscriptos ({{ inscripciones.count }})</h2>
+        <!-- ¡EL BOTÓN CLAVE! -->
+        <a href="{% url 'academico:curso_inscribir_alumno_list' curso_pk=curso.pk %}" class="btn-primary">Inscribir Alumnos</a>
+    </div>
+
+    <table class="table-list">
+        <thead>
+            <tr>
+                <th>DNI</th>
+                <th>Apellido y Nombre</th>
+                <th>Email</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for inscripcion in inscripciones %}
+            <tr>
+                <td>{{ inscripcion.alumno.dni }}</td>
+                <td>{{ inscripcion.alumno }}</td>
+                <td>{{ inscripcion.alumno.email }}</td>
+                <td class="actions">
+                    <!-- Aquí podrías poner botones para "Ver Notas", "Dar de Baja", etc. en el futuro -->
+                    <a href="#">Ver Ficha</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">Todavía no hay alumnos inscriptos en este curso.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

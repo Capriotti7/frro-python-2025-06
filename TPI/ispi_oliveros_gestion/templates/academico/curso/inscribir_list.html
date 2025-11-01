@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="header-bar">
+        <h2>Inscribir Alumnos a: {{ curso.materia.nombre }}</h2>
+        <a href="{% url 'academico:curso_detail' curso_pk=curso.pk %}" class="btn-secondary">← Volver al Detalle del Curso</a>
+    </div>
+
+    <!-- BARRA DE BÚSQUEDA -->
+    <form method="get" class="search-form">
+        <input type="text" name="dni_search" value="{{ search_dni }}" placeholder="Buscar por DNI...">
+        <button type="submit" class="btn-primary">Buscar</button>
+    </form>
+
+    <table class="table-list">
+        <thead>
+            <tr>
+                <th>DNI</th>
+                <th>Apellido y Nombre</th>
+                <th>Email</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for alumno in alumnos %}
+            <tr>
+                <td>{{ alumno.dni }}</td>
+                <td>{{ alumno }}</td>
+                <td>{{ alumno.email }}</td>
+                <td class="actions">
+                    <!-- Cada botón es un mini-formulario que envía un POST -->
+                    <form action="{% url 'academico:curso_inscribir_alumno_action' curso_pk=curso.pk alumno_pk=alumno.pk %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-success">Inscribir</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">
+                    {% if search_dni %}
+                        No se encontraron alumnos con ese DNI.
+                    {% else %}
+                        No hay más alumnos disponibles para inscribir.
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

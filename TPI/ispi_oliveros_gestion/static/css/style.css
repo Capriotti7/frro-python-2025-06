@@ -566,3 +566,9 @@ footer {
 .error-button {
   font-size: 1.1em;
 }
+
+.search-form { display: flex; margin-bottom: 20px; }
+.search-form input { flex-grow: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px 0 0 4px; }
+.search-form button { border-radius: 0 4px 4px 0; }
+.btn-success { background-color: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+.btn-success:hover { background-color: #218838; }

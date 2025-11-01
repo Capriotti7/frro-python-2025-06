@@ -45,4 +45,10 @@ urlpatterns = [
 
     # URL para la página de selección de cursos para asistencia
     path('asistencias/seleccionar-curso/', views.asistencia_seleccion_curso_view, name='asistencia_seleccion_curso'),
+    # Para ver el detalle de un curso y su lista de inscriptos
+    path('cursos/<int:curso_pk>/', views.curso_detail_view, name='curso_detail'),
+    # Para ir a la página de búsqueda y selección de alumnos a inscribir
+    path('cursos/<int:curso_pk>/inscribir/', views.curso_inscribir_alumno_list_view, name='curso_inscribir_alumno_list'),
+    # La acción que inscribe a un alumno (se llamará con un POST)
+    path('cursos/<int:curso_pk>/inscribir-accion/<int:alumno_pk>/', views.curso_inscribir_alumno_action_view, name='curso_inscribir_alumno_action'),
 ]
