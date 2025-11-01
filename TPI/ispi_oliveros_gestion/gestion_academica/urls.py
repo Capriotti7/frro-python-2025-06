@@ -1,11 +1,13 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
-from web.views import home_view, handle_not_found_view
+from web.views import home_view, handle_not_found_view, register_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_view, name='home'), # La página pública
 
+    
+    path('accounts/register/', register_view, name='register'),
     # 1. URLs de Autenticación (login, logout, etc.)
     # Django nos da esto ya hecho.
     path('accounts/', include('django.contrib.auth.urls')),

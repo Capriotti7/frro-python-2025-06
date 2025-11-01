@@ -1,8 +1,13 @@
 from django.db import models
 from alumnos.models import Alumno
+from django.contrib.auth.models import User
 
 
 class Docente(models.Model):
+ 
+    # Añadimos null=True y blank=True
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='perfil_docente', null=True, blank=True)
+
     dni = models.CharField(max_length=20, unique=True)
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)
@@ -11,6 +16,7 @@ class Docente(models.Model):
 
     def __str__(self):
         return f"{self.apellido}, {self.nombre}"
+    
 
 
 class Carrera(models.Model):
@@ -108,3 +114,4 @@ class Asistencia(models.Model):
 
     def __str__(self):
         return f"{self.inscripcion.alumno} - {self.fecha_clase}: {self.estado}"
+

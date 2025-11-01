@@ -572,3 +572,9 @@ footer {
 .search-form button { border-radius: 0 4px 4px 0; }
 .btn-success { background-color: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
 .btn-success:hover { background-color: #218838; }
+
+.dashboard-header { text-align: center; margin-bottom: 40px; }
+.dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.dashboard-card { display: block; background-color: #f9f9f9; padding: 20px; border: 1px solid #ddd; border-radius: 8px; text-decoration: none; color: #333; transition: box-shadow 0.3s; }
+.dashboard-card:hover { box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.dashboard-card h3 { margin-top: 0; }

@@ -6,10 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión ISPI Oliveros</title>
     
-    <!-- Favicon del Instituto -->
     <link rel="icon" href="{% static 'img/favicon.jpeg' %}" type="image/png">
-    
-    <!-- Hoja de Estilos Principal -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
@@ -24,11 +21,17 @@
             <!-- Menú de Navegación -->
             <nav>
                 {% if user.is_authenticated %}
-                    <!-- Menú para usuarios autenticados (administrativos/docentes) -->
                     <a href="{% url 'dashboard' %}" {% if request.resolver_match.url_name == 'dashboard' %}class="active"{% endif %}>Dashboard</a>
-                    <a href="{% url 'alumnos:alumno_list' %}" {% if request.resolver_match.app_name == 'alumnos' %}class="active"{% endif %}>Alumnos</a>
-                    <a href="{% url 'academico:carrera_list' %}" {% if request.resolver_match.app_name == 'academico' %}class="active"{% endif %}>Académico</a> 
-                    <a href="{% url 'finanzas:gestion_financiera' %}" {% if request.resolver_match.app_name == 'finanzas' %}class="active"{% endif %}>Finanzas</a> 
+                    
+                    {% if user.is_superuser or user.perfil_administrador %}
+                        <a href="{% url 'alumnos:alumno_list' %}" {% if request.resolver_match.app_name == 'alumnos' %}class="active"{% endif %}>Alumnos</a>
+                        <a href="{% url 'academico:carrera_list' %}" {% if request.resolver_match.app_name == 'academico' %}class="active"{% endif %}>Académico</a> 
+                        <a href="{% url 'finanzas:gestion_financiera' %}" {% if request.resolver_match.app_name == 'finanzas' %}class="active"{% endif %}>Finanzas</a> 
+                    {% endif %}
+
+                    {% if user.perfil_docente %}
+                        {# Enlaces para Docentes aquí si los necesitas en el futuro #}
+                    {% endif %}
                     
                     <div class="user-menu">
                         <span>| Hola, {{ user.first_name|default:user.username }}</span>
@@ -39,10 +42,10 @@
                     </div>
 
                 {% else %}
-                    <!-- Menú para visitantes (público) -->
                     <a href="{% url 'home' %}">Inicio</a>
                     <a href="#">Carreras</a>
                     <a href="{% url 'login' %}">Iniciar Sesión</a>
+                    <a href="{% url 'register' %}">Regístrate</a>
                 {% endif %}
             </nav>
         </div>
@@ -61,6 +64,7 @@
 
     <!-- ================== CONTENIDO PRINCIPAL DE CADA PÁGINA ================== -->
     <main>
+        {# --- ESTE ES EL ÚNICO LUGAR DONDE DEBE ESTAR block content --- #}
         {% block content %}{% endblock %}
     </main>
 

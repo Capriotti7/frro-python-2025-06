@@ -10,7 +10,8 @@ from .forms import CarreraForm, MateriaForm, CursoForm, DocenteForm
 from core.decorators import group_required
 from django.db.models import Q
 from django.views.decorators.http import require_POST
-
+from core.decorators import superuser_required
+from core.decorators import role_required
 
 
 # --- VISTAS PARA CARRERA ---
@@ -20,6 +21,7 @@ def carrera_list_view(request):
     context = {'carreras': carreras}
     return render(request, 'academico/carrera/list.html', context)
 
+@role_required('is_superuser')
 @login_required
 def carrera_create_view(request):
     if request.method == 'POST':
@@ -33,6 +35,7 @@ def carrera_create_view(request):
     context = {'form': form}
     return render(request, 'academico/carrera/form.html', context)
 
+@role_required('is_superuser')
 @login_required
 def carrera_update_view(request, pk):
     carrera = get_object_or_404(Carrera, pk=pk)
@@ -47,6 +50,7 @@ def carrera_update_view(request, pk):
     context = {'form': form, 'carrera': carrera}
     return render(request, 'academico/carrera/form.html', context)
 
+@role_required('is_superuser')
 @login_required
 def carrera_delete_view(request, pk):
     carrera = get_object_or_404(Carrera, pk=pk)
@@ -65,6 +69,7 @@ def materia_list_view(request, carrera_pk):
     context = {'carrera': carrera, 'materias': materias}
     return render(request, 'academico/materia/list.html', context)
 
+@role_required('is_superuser')
 @login_required
 def materia_create_view(request, carrera_pk):
     carrera = get_object_or_404(Carrera, pk=carrera_pk)
@@ -82,7 +87,7 @@ def materia_create_view(request, carrera_pk):
     context = {'form': form, 'carrera': carrera}
     return render(request, 'academico/materia/form.html', context)
 
-
+@role_required('is_superuser')
 @login_required
 def materia_update_view(request, pk):
     materia = get_object_or_404(Materia, pk=pk)
@@ -99,6 +104,7 @@ def materia_update_view(request, pk):
     context = {'form': form, 'carrera': carrera}
     return render(request, 'academico/materia/form.html', context)
 
+@role_required('is_superuser')
 @login_required
 def materia_delete_view(request, pk):
     materia = get_object_or_404(Materia, pk=pk)

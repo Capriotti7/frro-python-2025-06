@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="dashboard-header">
+        <h1>Panel del Docente</h1>
+        <p>Bienvenido, {{ docente.nombre }} {{ docente.apellido }}.</p>
+    </div>
+
+    <div class="header-bar">
+        <h2>Mis Cursos Asignados ({{ cursos.count }})</h2>
+    </div>
+
+    {% if cursos %}
+        <table class="table-list">
+            <thead>
+                <tr>
+                    <th>Materia</th>
+                    <th>Ciclo Lectivo</th>
+                    <th>Horario</th>
+                    <th>Alumnos Inscriptos</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for curso in cursos %}
+                <tr>
+                    <td>{{ curso.materia.nombre }}</td>
+                    <td>{{ curso.ciclo_lectivo }}</td>
+                    <td>{{ curso.get_dia_cursado_display }} de {{ curso.hora_inicio|time:"H:i" }} a {{ curso.hora_fin|time:"H:i" }}</td>
+                    <td>{{ curso.inscripciones.count }}</td>
+                    <td class="actions">
+                        <a href="{% url 'academico:curso_detail' curso_pk=curso.pk %}" class="btn-secondary">Ver Inscriptos</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Actualmente no tienes cursos asignados.</p>
+    {% endif %}
+</div>
+{% endblock content %}

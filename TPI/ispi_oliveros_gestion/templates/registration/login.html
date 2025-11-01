@@ -28,6 +28,11 @@
             </div>
             {% endif %}
             <button type="submit" class="btn-login">Ingresar</button>
+            <div class="form-link">
+        <p>¿No tienes una cuenta? <a href="{% url 'register' %}">Regístrate aquí</a></p>
+        {# También puedes añadir un enlace para recuperar contraseña en el futuro #}
+        {# <p><a href="{% url 'password_reset' %}">¿Olvidaste tu contraseña?</a></p> #}
+    </div>
         </form>
     </div>
 </div>

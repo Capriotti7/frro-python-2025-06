@@ -141,3 +141,6 @@ LOGIN_URL = 'login'              # El nombre de la URL de login
 # Esto le dice a Django que no muestre la página de error 403 por defecto
 # si estamos en modo DEBUG.
 # En producción, Django usará automáticamente tu 403.html.
+
+CODIGO_REGISTRO_ADMIN = "2"
+CODIGO_REGISTRO_DOCENTE = "1"

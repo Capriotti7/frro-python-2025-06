@@ -51,4 +51,5 @@ urlpatterns = [
     path('cursos/<int:curso_pk>/inscribir/', views.curso_inscribir_alumno_list_view, name='curso_inscribir_alumno_list'),
     # La acción que inscribe a un alumno (se llamará con un POST)
     path('cursos/<int:curso_pk>/inscribir-accion/<int:alumno_pk>/', views.curso_inscribir_alumno_action_view, name='curso_inscribir_alumno_action'),
+    
 ]

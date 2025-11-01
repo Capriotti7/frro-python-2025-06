@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% block content %}
 <div class="container">
     <div class="list-header">
@@ -6,8 +7,13 @@
             <h2>Materias de la Carrera</h2>
             <p style="margin:0; font-size: 1.2em; color: #555;"><strong>{{ carrera.nombre }}</strong></p>
         </div>
-        <a href="{% url 'academico:materia_add' carrera_pk=carrera.pk %}" class="btn-primary">Agregar Materia</a>
+
+        {# El botón "Agregar Materia" solo es visible para el Superusuario #}
+        {% if user.is_superuser %}
+            <a href="{% url 'academico:materia_add' carrera_pk=carrera.pk %}" class="btn-primary">Agregar Materia</a>
+        {% endif %}
     </div>
+
     <table class="table-list">
         <thead>
             <tr>
@@ -22,7 +28,6 @@
             {% for materia in materias %}
             <tr>
                 <td>
-                    <!-- Enlace a la lista de cursos de esta materia -->
                     <a href="{% url 'academico:curso_list' materia_pk=materia.pk %}" title="Ver cursos de esta materia">
                         <strong>{{ materia.nombre }}</strong>
                     </a>
@@ -30,18 +35,25 @@
                 <td>{{ materia.anio_carrera }}°</td>
                 <td>{{ materia.get_modalidad_cursado_display }}</td>
                 <td>{{ materia.cursos.count }}</td>
-                <td>
-                    <a href="{% url 'academico:materia_edit' pk=materia.pk %}">Editar</a> |
-                    <a href="{% url 'academico:materia_delete' pk=materia.pk %}" class="text-danger">Eliminar</a>
+                <td class="actions">
+                    {# "Ver Cursos" es visible para Admin y Superusuario #}
+                    <a href="{% url 'academico:curso_list' materia_pk=materia.pk %}" class="btn-secondary">Ver Cursos</a>
+                    
+                    {# "Editar" y "Eliminar" son solo para el Superusuario #}
+                    {% if user.is_superuser %}
+                        | <a href="{% url 'academico:materia_edit' pk=materia.pk %}">Editar</a>
+                        | <a href="{% url 'academico:materia_delete' pk=materia.pk %}" class="text-danger">Eliminar</a>
+                    {% endif %}
                 </td>
             </tr>
             {% empty %}
-            <tr><td colspan="3">No hay materias registradas para esta carrera.</td></tr>
+            <tr><td colspan="5">No hay materias registradas para esta carrera.</td></tr>
             {% endfor %}
         </tbody>
     </table>
+
     <div class="form-actions" style="margin-top: 20px;">
       <a href="{% url 'academico:carrera_list' %}" class="btn-secondary">← Volver a Carreras</a>
     </div>
 </div>
-{% endblock %}
+{% endblock content %}

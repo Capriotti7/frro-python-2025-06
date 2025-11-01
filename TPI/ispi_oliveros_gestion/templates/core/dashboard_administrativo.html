@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="dashboard-header">
+        <h1>Panel de Administración</h1>
+        <p>Bienvenido, {{ user.first_name|default:user.username }}.</p>
+    </div>
+
+    <div class="dashboard-grid">
+        <a href="{% url 'alumnos:alumno_list' %}" class="dashboard-card">
+            <h3>Gestionar Alumnos</h3>
+            <p>Ver listado, editar, inscribir a cursos, y más.</p>
+        </a>
+        <a href="{% url 'academico:carrera_list' %}" class="dashboard-card">
+            <h3>Gestionar Materias y Carreras</h3>
+            <p>Visualizar carreras y materias, y administrar cursos y docentes.</p>
+        </a>
+        <a href="{% url 'finanzas:gestion_financiera' %}" class="dashboard-card">
+            <h3>Control Financiero</h3>
+            <p>Gestionar deudas, registrar pagos y generar reportes.</p>
+        </a>
+    </div>
+</div>
+{% endblock %}
