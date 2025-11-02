@@ -1,7 +1,8 @@
 # academico/forms.py
 
 from django import forms
-from .models import Carrera, Materia, Curso, Docente
+from .models import Carrera, Materia, Curso
+from core.models import Docente
 import datetime
 
 class CarreraForm(forms.ModelForm):
