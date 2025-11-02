@@ -4,12 +4,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from alumnos.models import Alumno
-from .models import Carrera, Materia, Curso, Docente, InscripcionCurso, Asistencia
+from .models import Carrera, Materia, Curso, InscripcionCurso, Asistencia
 from django.utils import timezone
 from .forms import CarreraForm, MateriaForm, CursoForm, DocenteForm
 from django.db.models import Q
 from django.views.decorators.http import require_POST
 from core.decorators import role_required
+from core.models import Docente
 
 
 # --- VISTAS PARA CARRERA ---

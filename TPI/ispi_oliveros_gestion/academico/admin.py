@@ -1,8 +1,8 @@
 # academico/admin.py
 
 from django.contrib import admin
-from .models import Docente, Carrera, Materia, Curso
-
+from .models import Carrera, Materia, Curso
+from core.models import Docente
 
 class DocenteAdmin(admin.ModelAdmin):
 
