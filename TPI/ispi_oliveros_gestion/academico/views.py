@@ -7,10 +7,8 @@ from alumnos.models import Alumno
 from .models import Carrera, Materia, Curso, Docente, InscripcionCurso, Asistencia
 from django.utils import timezone
 from .forms import CarreraForm, MateriaForm, CursoForm, DocenteForm
-from core.decorators import group_required
 from django.db.models import Q
 from django.views.decorators.http import require_POST
-from core.decorators import superuser_required
 from core.decorators import role_required
 
 
@@ -130,6 +128,7 @@ def curso_list_view(request, materia_pk):
 
 
 @login_required
+@role_required('is_superuser', 'is_admin')
 def curso_create_view(request, materia_pk):
     materia = get_object_or_404(Materia, pk=materia_pk)
     if request.method == 'POST':
@@ -146,6 +145,7 @@ def curso_create_view(request, materia_pk):
     return render(request, 'academico/curso/form.html', context)
 
 @login_required
+@role_required('is_superuser', 'is_admin')
 def curso_update_view(request, pk):
     curso = get_object_or_404(Curso, pk=pk)
     if request.method == 'POST':
@@ -160,6 +160,7 @@ def curso_update_view(request, pk):
     return render(request, 'academico/curso/form.html', context)
 
 @login_required
+@role_required('is_superuser', 'is_admin')
 def curso_delete_view(request, pk):
     curso = get_object_or_404(Curso, pk=pk)
     if request.method == 'POST':
@@ -172,6 +173,7 @@ def curso_delete_view(request, pk):
 
 # --- VISTAS PARA DOCENTE ---
 @login_required
+@role_required('is_superuser', 'is_admin')
 def docente_list_view(request):
     docentes = Docente.objects.all().order_by('apellido', 'nombre')
     context = {'docentes': docentes}
@@ -187,6 +189,7 @@ def docente_list_view(request):
     return render(request, 'academico/docente/list.html', context)
 
 @login_required
+@role_required('is_superuser', 'is_admin')
 def docente_list_from_materia_view(request, materia_pk):
     # 1. Obtenemos la materia desde la que venimos, gracias a la URL
     materia = get_object_or_404(Materia, pk=materia_pk)
@@ -203,7 +206,7 @@ def docente_list_from_materia_view(request, materia_pk):
 
 
 @login_required
-@login_required
+@role_required('is_superuser', 'is_admin')
 def docente_create_view(request):
     # Leemos la "pista" de la URL, tanto si es GET (al cargar) como si es POST (al enviar)
     materia_pk_origen = request.POST.get('from_materia') or request.GET.get('from_materia')
@@ -230,6 +233,7 @@ def docente_create_view(request):
     return render(request, 'academico/docente/form.html', context)
 
 @login_required
+@role_required('is_superuser', 'is_admin')
 def docente_update_view(request, pk):
     docente = get_object_or_404(Docente, pk=pk)
     if request.method == 'POST':
@@ -244,6 +248,7 @@ def docente_update_view(request, pk):
     return render(request, 'academico/docente/form.html', context)
 
 @login_required
+@role_required('is_superuser', 'is_admin')
 def docente_delete_view(request, pk):
     docente = get_object_or_404(Docente, pk=pk)
     if request.method == 'POST':
@@ -254,6 +259,7 @@ def docente_delete_view(request, pk):
     return render(request, 'academico/docente/confirm_delete.html', context)
 
 @login_required
+@role_required('is_superuser', 'is_admin')
 def docente_delete_from_materia_view(request, pk, materia_pk):
     docente = get_object_or_404(Docente, pk=pk)
     materia = get_object_or_404(Materia, pk=materia_pk) # También obtenemos la materia
@@ -273,6 +279,7 @@ def docente_delete_from_materia_view(request, pk, materia_pk):
 
 # --- VISTAS PARA INSCRIPCIONES A CURSOS ---
 @login_required
+@role_required('is_superuser', 'is_admin')
 def curso_selection_list_view(request, alumno_pk):
     alumno = get_object_or_404(Alumno, pk=alumno_pk)
     
@@ -289,6 +296,7 @@ def curso_selection_list_view(request, alumno_pk):
     return render(request, 'academico/inscripcion/curso_selection_list.html', context)
 
 @login_required
+@role_required('is_superuser', 'is_admin')
 def inscribir_alumno_ejecutar_view(request):
     if request.method == 'POST':
         alumno_pk = request.POST.get('alumno_pk')
@@ -311,7 +319,6 @@ def inscribir_alumno_ejecutar_view(request):
 
 # --- VISTAS PARA GESTIÓN DE ASISTENCIAS ---
 @login_required
-@group_required('Administrativos', 'Docentes')
 def gestionar_asistencias_view(request, curso_pk):
     curso = get_object_or_404(Curso, pk=curso_pk)
     
@@ -352,7 +359,6 @@ def gestionar_asistencias_view(request, curso_pk):
     return render(request, 'academico/asistencia/gestionar.html', context)
 
 @login_required
-@group_required('Administrativos', 'Docentes')
 def asistencia_seleccion_curso_view(request):
     # En el futuro, si un docente inicia sesión, podríamos mostrar solo SUS cursos.
     # if request.user.groups.filter(name='Docentes').exists():
@@ -409,6 +415,7 @@ def curso_detail_view(request, curso_pk):
 
 
 @login_required
+@role_required('is_superuser', 'is_admin')
 def curso_inscribir_alumno_list_view(request, curso_pk):
     curso = get_object_or_404(Curso, pk=curso_pk)
 
@@ -432,6 +439,7 @@ def curso_inscribir_alumno_list_view(request, curso_pk):
 
 @require_POST # Asegura que esta vista solo se pueda llamar con un método POST
 @login_required
+@role_required('is_superuser', 'is_admin')
 def curso_inscribir_alumno_action_view(request, curso_pk, alumno_pk):
     curso = get_object_or_404(Curso, pk=curso_pk)
     alumno = get_object_or_404(Alumno, pk=alumno_pk)

@@ -86,7 +86,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ispi_oliveros_db',
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': 'administrador',
         'HOST': 'localhost',
         'PORT': '3306',
     }

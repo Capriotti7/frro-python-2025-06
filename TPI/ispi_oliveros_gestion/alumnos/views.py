@@ -3,14 +3,14 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from core.decorators import role_required
 from .models import Alumno 
 from .forms import AlumnoForm
 from finanzas.models import Deuda
 from academico.models import InscripcionCurso
-from core.decorators import group_required
 
 @login_required
-@group_required('Administrativos')
+@role_required('is_superuser', 'is_admin')
 def alumno_list_view(request):
 
     alumnos = Alumno.objects.all().order_by('apellido', 'nombre')
@@ -21,7 +21,7 @@ def alumno_list_view(request):
     return render(request, 'alumnos/alumno/list.html', context)
 
 @login_required
-@group_required('Administrativos')
+@role_required('is_superuser', 'is_admin')
 def alumno_create_view(request):
     if request.method == 'POST':
         form = AlumnoForm(request.POST)
@@ -38,7 +38,7 @@ def alumno_create_view(request):
     return render(request, 'alumnos/alumno/form.html', context)
 
 @login_required
-@group_required('Administrativos')
+@role_required('is_superuser', 'is_admin')
 def alumno_update_view(request, pk):
 
     alumno = get_object_or_404(Alumno, pk=pk)
@@ -59,7 +59,7 @@ def alumno_update_view(request, pk):
     return render(request, 'alumnos/alumno/form.html', context)
 
 @login_required
-@group_required('Administrativos')
+@role_required('is_superuser', 'is_admin')
 def alumno_delete_view(request, pk):
     alumno = get_object_or_404(Alumno, pk=pk)
 
@@ -75,7 +75,7 @@ def alumno_delete_view(request, pk):
     return render(request, 'alumnos/alumno/confirm_delete.html', context)
 
 @login_required
-@group_required('Administrativos')
+@role_required('is_superuser', 'is_admin')
 def alumno_detail_view(request, pk):
     alumno = get_object_or_404(Alumno, pk=pk)
 

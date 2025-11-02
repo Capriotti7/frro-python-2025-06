@@ -3,6 +3,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from core.decorators import role_required
 from .models import Deuda
 from .forms import PagoForm, ConceptoPagoForm
 from academico.models import Curso # Necesitaremos esto más adelante
@@ -10,6 +11,7 @@ from .models import ConceptoPago # Y esto para el formulario
 from .services import generar_deudas_mensuales
 
 @login_required
+@role_required('is_superuser', 'is_admin')
 def registrar_pago_view(request, deuda_pk):
     deuda = get_object_or_404(Deuda, pk=deuda_pk)
     
@@ -32,6 +34,7 @@ def registrar_pago_view(request, deuda_pk):
     return render(request, 'finanzas/pago_form.html', context)
 
 @login_required
+@role_required('is_superuser', 'is_admin')
 def gestion_financiera_view(request):
     conceptos = ConceptoPago.objects.all()
     
@@ -41,6 +44,7 @@ def gestion_financiera_view(request):
     return render(request, 'finanzas/gestion_financiera.html', context)
 
 @login_required
+@role_required('is_superuser', 'is_admin')
 def generar_deudas_view(request):
     if request.method == 'POST':
         concepto_pk = request.POST.get('concepto')
@@ -56,11 +60,13 @@ def generar_deudas_view(request):
 
 # --- VISTAS PARA CONCEPTO DE PAGO ---
 @login_required
+@role_required('is_superuser', 'is_admin')
 def concepto_pago_list_view(request):
     conceptos = ConceptoPago.objects.all().order_by('descripcion')
     return render(request, 'finanzas/concepto/list.html', {'conceptos': conceptos})
 
 @login_required
+@role_required('is_superuser', 'is_admin')
 def concepto_pago_create_view(request):
     if request.method == 'POST':
         form = ConceptoPagoForm(request.POST)
@@ -73,6 +79,7 @@ def concepto_pago_create_view(request):
     return render(request, 'finanzas/concepto/form.html', {'form': form})
 
 @login_required
+@role_required('is_superuser', 'is_admin')
 def concepto_pago_update_view(request, pk):
     concepto = get_object_or_404(ConceptoPago, pk=pk)
     if request.method == 'POST':
@@ -86,6 +93,7 @@ def concepto_pago_update_view(request, pk):
     return render(request, 'finanzas/concepto/form.html', {'form': form, 'concepto': concepto})
 
 @login_required
+@role_required('is_superuser', 'is_admin')
 def concepto_pago_delete_view(request, pk): 
     concepto = get_object_or_404(ConceptoPago, pk=pk)
     if request.method == 'POST':
