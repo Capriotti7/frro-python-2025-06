@@ -8,15 +8,31 @@ from .models import Alumno
 from .forms import AlumnoForm
 from finanzas.models import Deuda
 from academico.models import InscripcionCurso
+from django.db.models import Q
 
 @login_required
 @role_required('is_superuser', 'is_admin')
 def alumno_list_view(request):
-
-    alumnos = Alumno.objects.all().order_by('apellido', 'nombre')
-
+    # Obtenemos el término de búsqueda de la URL (?q=...)
+    query = request.GET.get('q', '')
+    
+    # Empezamos con todos los alumnos
+    alumnos_list = Alumno.objects.all()
+    
+    # Si hay un término de búsqueda, filtramos el queryset
+    if query:
+        alumnos_list = alumnos_list.filter(
+            Q(apellido__icontains=query) | 
+            Q(nombre__icontains=query) | 
+            Q(dni__icontains=query)
+        )
+    
+    # Finalmente, ordenamos el resultado
+    alumnos = alumnos_list.order_by('apellido', 'nombre')
+    
     context = {
-        'alumnos': alumnos
+        'alumnos': alumnos,
+        'query': query, # Pasamos el query al template para que se mantenga en la barra
     }
     return render(request, 'alumnos/alumno/list.html', context)
 
@@ -80,13 +96,24 @@ def alumno_detail_view(request, pk):
     alumno = get_object_or_404(Alumno, pk=pk)
 
     # --- LÓGICA FINANCIERA ---
-    # Obtenemos todas las deudas del alumno, ordenadas por la más reciente.
-    deudas = Deuda.objects.filter(alumno=alumno).order_by('fecha_vencimiento')
+    deudas = Deuda.objects.filter(alumno=alumno).order_by('-fecha_vencimiento')
+
+    total_adeudado_calculado = 0
+    total_pagado_calculado = 0
     
-    # Calculamos los totales generales
-    total_adeudado = sum(d.monto for d in deudas)
-    total_pagado = sum(d.total_pagado for d in deudas)
-    saldo_total = total_adeudado - total_pagado
+    for d in deudas:
+        # Sumamos lo que se ha pagado por cada deuda
+        total_pagado_calculado += d.total_pagado
+        
+        # Para el total adeudado, usamos una lógica más inteligente:
+        if d.estado == 'Pagado':
+            # Si una deuda está pagada, su "costo" fue lo que se pagó por ella.
+            total_adeudado_calculado += d.total_pagado
+        else:
+            # Si no está pagada, su "costo" es su monto final actual (con recargos).
+            total_adeudado_calculado += d.monto_final
+
+    saldo_total_calculado = total_adeudado_calculado - total_pagado_calculado
 
     # --- LÓGICA ACADÉMICA ---
     inscripciones = InscripcionCurso.objects.filter(alumno=alumno).order_by('-curso__ciclo_lectivo')
@@ -94,9 +121,9 @@ def alumno_detail_view(request, pk):
     context = {
         'alumno': alumno,
         'deudas': deudas,
-        'total_adeudado': total_adeudado,
-        'total_pagado': total_pagado,
-        'saldo_total': saldo_total,
+        'total_adeudado': total_adeudado_calculado,
+        'total_pagado': total_pagado_calculado,
+        'saldo_total': saldo_total_calculado,
         'inscripciones': inscripciones,
     }
 

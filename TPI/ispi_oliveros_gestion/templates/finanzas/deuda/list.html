@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="list-header">
+        <h2>Listado General de Deudas</h2>
+        <a href="{% url 'finanzas:gestion_financiera' %}" class="btn-secondary">← Volver al Panel</a>
+    </div>
+    <p>Aquí puedes ver todas las deudas generadas en el sistema y eliminar registros en caso de error.</p>
+    <table class="table-list">
+        <thead>
+            <tr>
+                <th>Alumno</th>
+                <th>Concepto</th>
+                <th>Monto</th>
+                <th>Vencimiento</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for deuda in deudas %}
+            <tr>
+                <td>{{ deuda.alumno.apellido }}, {{ deuda.alumno.nombre }}</td>
+                <td>{{ deuda.concepto.descripcion }}</td>
+                <td>${{ deuda.monto_final|floatformat:2 }}</td>
+                <td>{{ deuda.fecha_vencimiento|date:"d/m/Y" }}</td>
+                <td><span class="status status-{{ deuda.estado|lower }}">{{ deuda.estado }}</span></td>
+                <td>
+                    <form method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta deuda?');">
+                        {% csrf_token %}
+                        <input type="hidden" name="delete_deuda_pk" value="{{ deuda.pk }}">
+                        <button type="submit" class="btn-danger-small">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6">No hay deudas registradas en el sistema.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

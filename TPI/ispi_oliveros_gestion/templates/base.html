@@ -27,7 +27,7 @@
                         <a href="{% url 'alumnos:alumno_list' %}" {% if request.resolver_match.app_name == 'alumnos' %}class="active"{% endif %}>Alumnos</a>
                         <a href="{% url 'academico:carrera_list' %}" {% if request.resolver_match.app_name == 'academico' %}class="active"{% endif %}>Académico</a> 
                         <a href="{% url 'finanzas:gestion_financiera' %}" {% if request.resolver_match.app_name == 'finanzas' %}class="active"{% endif %}>Finanzas</a> 
-                    {% endif %}
+                    {% endif %} 
 
                     {% if user.perfil_docente %}
                         {# Enlaces para Docentes aquí si los necesitas en el futuro #}

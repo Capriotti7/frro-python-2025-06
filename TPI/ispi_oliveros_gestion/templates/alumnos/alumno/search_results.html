@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="list-header">
+        {% if query %}
+            <h2>Resultados de búsqueda para: "{{ query }}"</h2>
+        {% else %}
+            <h2>Búsqueda de Alumnos</h2>
+            <p>Por favor, introduce un apellido o DNI en la barra de búsqueda superior.</p>
+        {% endif %}
+    </div>
+
+    {% if resultados %}
+    <table class="table-list">
+        <thead>
+            <tr>
+                <th>DNI</th>
+                <th>Apellido</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for alumno in resultados %}
+            <tr>
+                <td>{{ alumno.dni }}</td>
+                <td>{{ alumno.apellido }}</td>
+                <td>{{ alumno.nombre }}</td>
+                <td>{{ alumno.email }}</td>
+                <td>
+                    <a href="{% url 'alumnos:alumno_detail' pk=alumno.pk %}" class="btn-primary-small">Ver Ficha</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% elif query %}
+    <p>No se encontraron alumnos que coincidan con tu búsqueda.</p>
+    {% endif %}
+
+    <div class="form-actions" style="margin-top: 20px;">
+      <a href="{% url 'alumnos:alumno_list' %}" class="btn-secondary">← Volver al Listado Completo</a>
+    </div>
+</div>
+{% endblock %}

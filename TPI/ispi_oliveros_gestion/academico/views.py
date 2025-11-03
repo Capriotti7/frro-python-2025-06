@@ -151,8 +151,7 @@ def curso_list_view(request, materia_pk):
     docentes_disponibles = Docente.objects.all().order_by('user__last_name', 'user__first_name')
     context = {
         'materia': materia,
-        'cursos': cursos,
-        'docentes_disponibles': docentes_disponibles,}
+        'cursos': cursos,}
     return render(request, 'academico/curso/list.html', context)
 
 
