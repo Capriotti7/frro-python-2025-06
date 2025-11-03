@@ -6,7 +6,7 @@ from django.contrib import messages
 from alumnos.models import Alumno
 from .models import Carrera, Materia, Curso, InscripcionCurso, Asistencia
 from django.utils import timezone
-from .forms import CarreraForm, MateriaForm, CursoForm, DocenteForm
+from .forms import CarreraForm, MateriaForm, CursoForm, DocenteForm, ValorCarreraForm
 from django.db.models import Q
 from django.views.decorators.http import require_POST
 from core.decorators import role_required
@@ -60,6 +60,33 @@ def carrera_delete_view(request, pk):
         return redirect('academico:carrera_list')
     context = {'carrera': carrera}
     return render(request, 'academico/carrera/confirm_delete.html', context)
+
+@login_required
+@role_required('is_superuser') 
+def valor_carrera_list_view(request, carrera_pk):
+    carrera = get_object_or_404(Carrera, pk=carrera_pk)
+    
+    if request.method == 'POST':
+        form = ValorCarreraForm(request.POST)
+        if form.is_valid():
+            nuevo_valor = form.save(commit=False)
+            nuevo_valor.carrera = carrera
+            nuevo_valor.save()
+            messages.success(request, f'Se ha agregado un nuevo valor de cuota para la carrera {carrera.nombre}.')
+            # Redirigimos a la misma página para ver el nuevo valor en la lista.
+            return redirect('academico:valor_carrera_list', carrera_pk=carrera.pk)
+    else:
+        # Si no es POST, creamos un formulario vacío.
+        form = ValorCarreraForm()
+
+    valores_historicos = carrera.valores_historicos.all().order_by('-fecha_vigencia')
+    
+    context = {
+        'carrera': carrera,
+        'valores_historicos': valores_historicos,
+        'form': form, 
+    }
+    return render(request, 'academico/carrera/valores_historicos.html', context)
 
 # --- VISTAS PARA MATERIA ---
 @login_required

@@ -11,6 +11,7 @@ urlpatterns = [
     path('carreras/agregar/', views.carrera_create_view, name='carrera_add'),
     path('carreras/<int:pk>/editar/', views.carrera_update_view, name='carrera_edit'),
     path('carreras/<int:pk>/eliminar/', views.carrera_delete_view, name='carrera_delete'),
+    path('carreras/<int:carrera_pk>/valores/', views.valor_carrera_list_view, name='valor_carrera_list'),
 
     # URLs de Materias (anidadas bajo una carrera)
     path('carreras/<int:carrera_pk>/materias/', views.materia_list_view, name='materia_list'),

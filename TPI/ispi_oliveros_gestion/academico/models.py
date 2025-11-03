@@ -1,6 +1,7 @@
 from django.db import models
 from alumnos.models import Alumno
 from django.contrib.auth.models import User
+from django.utils import timezone
 from core.models import Docente
 
 class Carrera(models.Model):
@@ -25,7 +26,34 @@ class Carrera(models.Model):
 
     def __str__(self):
         return self.nombre
+    
+    @property
+    def valor_cuota_actual(self):
+        """
+        Busca en el historial y devuelve el último valor vigente para la cuota de esta carrera.
+        Si no hay ninguno, devuelve 0.
+        """
+        valor = self.valores_historicos.filter(fecha_vigencia__lte=timezone.now()).order_by('-fecha_vigencia').first()
+        return valor.valor_cuota if valor else 0.00
 
+class ValorCarrera(models.Model):
+    """
+    Modela el historial de valores de cuota para una carrera.
+    """
+    carrera = models.ForeignKey(Carrera, on_delete=models.CASCADE, related_name='valores_historicos')
+    valor_cuota = models.DecimalField(max_digits=10, decimal_places=2)
+    fecha_vigencia = models.DateField(
+        help_text="Fecha a partir de la cual este valor de cuota es válido."
+    )
+
+    def __str__(self):
+        return f"Valor para {self.carrera.nombre} de ${self.valor_cuota} (desde {self.fecha_vigencia.strftime('%d/%m/%Y')})"
+
+    class Meta:
+        # Ordenamos por defecto para que los valores más recientes aparezcan primero.
+        ordering = ['-fecha_vigencia']
+        # Evita que se pueda registrar el mismo valor para la misma carrera en la misma fecha.
+        unique_together = ['carrera', 'fecha_vigencia']
 
 class Materia(models.Model):
     MODALIDADES = [
