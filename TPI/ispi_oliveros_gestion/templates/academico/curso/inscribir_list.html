@@ -4,7 +4,6 @@
 <div class="container">
     <div class="header-bar">
         <h2>Inscribir Alumnos a: {{ curso.materia.nombre }}</h2>
-        <a href="{% url 'academico:curso_detail' curso_pk=curso.pk %}" class="btn-secondary">← Volver al Detalle del Curso</a>
     </div>
 
     <!-- BARRA DE BÚSQUEDA -->
@@ -49,5 +48,8 @@
             {% endfor %}
         </tbody>
     </table>
+    <div class="form-actions" style="margin-top: 20px;">
+        <a href="{% url 'academico:curso_detail' curso_pk=curso.pk %}" class="btn-secondary">← Volver al Detalle del Curso</a>
+    </div>
 </div>
 {% endblock %}

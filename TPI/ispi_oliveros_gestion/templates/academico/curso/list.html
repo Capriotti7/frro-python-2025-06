@@ -37,7 +37,7 @@
         </tbody>
     </table>
     <div class="form-actions" style="margin-top: 20px;">
-      <a href="{% url 'academico:materia_list' carrera_pk=materia.carrera.pk %}" class="btn-secondary">← Volver a Materias</a>
+        <a href="{% url 'academico:materia_list' carrera_pk=materia.carrera.pk %}" class="btn-secondary">← Volver a Materias</a>
     </div>
 
 
@@ -58,9 +58,9 @@
         <tbody>
             {% for docente in docentes_disponibles %}
             <tr>
-                <td>{{ docente.apellido }}, {{ docente.nombre }}</td>
+                <td>{{ docente.user.last_name }}, {{ docente.user.first_name }}</td>
                 <td>{{ docente.dni }}</td>
-                <td>{{ docente.email }}</td>
+                <td>{{ docente.user.email }}</td>
                 <td>{{ docente.telefono|default:"-" }}</td>
             </tr>
             {% empty %}
@@ -74,7 +74,7 @@
     </table>
 
     <div class="form-actions" style="margin-top: 20px;">
-      <a href="{% url 'academico:materia_list' carrera_pk=materia.carrera.pk %}" class="btn-secondary">← Volver a Materias</a>
+        <a href="{% url 'academico:materia_list' carrera_pk=materia.carrera.pk %}" class="btn-secondary">← Volver a Materias</a>
     </div>
 
 </div>

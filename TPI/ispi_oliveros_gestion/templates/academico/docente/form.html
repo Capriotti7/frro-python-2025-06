@@ -6,26 +6,20 @@
     <form method="post">
         {% csrf_token %}
 
-        <!-- --- INICIO DE LA MODIFICACIÓN --- -->
-        <!-- 1. Campo oculto para "recordar" de dónde venimos -->
         {% if materia_pk_origen %}
             <input type="hidden" name="from_materia" value="{{ materia_pk_origen }}">
         {% endif %}
-        <!-- --- FIN DE LA MODIFICACIÓN --- -->
 
         {{ form.as_p }}
         
         <div class="form-actions">
             <button type="submit" class="btn-primary">Guardar Cambios</button>
 
-            <!-- --- INICIO DE LA MODIFICACIÓN --- -->
-            <!-- 2. Botón "Cancelar" inteligente -->
             {% if materia_pk_origen %}
                 <a href="{% url 'academico:docente_list_from_materia' materia_pk=materia_pk_origen %}" class="btn-secondary">Cancelar</a>
             {% else %}
                 <a href="{% url 'academico:docente_list' %}" class="btn-secondary">Cancelar</a>
             {% endif %}
-            <!-- --- FIN DE LA MODIFICACIÓN --- -->
         </div>
     </form>
 </div>
