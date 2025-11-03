@@ -1,6 +1,8 @@
 from django.db import models
 from alumnos.models import Alumno
 from django.db.models import Sum
+from django.utils import timezone
+from decimal import Decimal
 
 
 class ConceptoPago(models.Model):
@@ -33,9 +35,44 @@ class Deuda(models.Model):
         return self.pagos.aggregate(Sum('monto_pagado'))['monto_pagado__sum'] or 0
 
     @property
+    def esta_vencida(self):
+        return self.fecha_vencimiento < timezone.now().date()
+    
+    @property
+    def recargo(self):
+        # La condición principal: si no está vencida, no hay recargo.
+        if self.estado != 'Vencido':
+            return 0
+        
+        # Segunda condición: si ya está pagada (aunque el estado sea 'Vencido' por error), no hay recargo.
+        if self.total_pagado >= self.monto:
+            return 0
+        
+        # Si llegamos aquí, la deuda está Vencida y tiene un saldo pendiente sobre el monto original.
+        hoy = timezone.now().date()
+
+        # Lógica para cuotas mensuales
+        if self.concepto.descripcion.lower() == 'cuota mensual':
+            # Verificamos si estamos en el mismo mes del vencimiento
+            if hoy.year == self.fecha_vencimiento.year and hoy.month == self.fecha_vencimiento.month:
+                # Recargo del 5% dentro del mes de vencimiento
+                return (self.monto * Decimal('0.05')).quantize(Decimal('0.01'))
+            else:
+                # Recargo del 10% para meses posteriores (a mes vencido)
+                return (self.monto * Decimal('0.10')).quantize(Decimal('0.01'))
+        
+        # Lógica para otras deudas vencidas (ej. 10% fijo)
+        else:
+            return (self.monto * Decimal('0.10')).quantize(Decimal('0.01'))
+    
+    @property
+    def monto_final(self):
+        return self.monto + self.recargo
+
+    @property
     def saldo(self):
         # Calcula el saldo restando lo pagado del monto total.
-        return self.monto - self.total_pagado
+        return self.monto_final - self.total_pagado  
 
     def __str__(self):
         return f"Deuda de {self.alumno} por {self.concepto} - ${self.monto}"

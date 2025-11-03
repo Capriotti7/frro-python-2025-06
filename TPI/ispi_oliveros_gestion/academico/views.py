@@ -148,11 +148,9 @@ def materia_delete_view(request, pk):
 def curso_list_view(request, materia_pk):
     materia = get_object_or_404(Materia, pk=materia_pk)
     cursos = Curso.objects.filter(materia=materia).order_by('-ciclo_lectivo', 'cuatrimestre')
-    docentes_disponibles = Docente.objects.all().order_by('apellido', 'nombre')
     context = {
         'materia': materia,
-        'cursos': cursos,
-        'docentes_disponibles': docentes_disponibles,}
+        'cursos': cursos,}
     return render(request, 'academico/curso/list.html', context)
 
 
@@ -204,7 +202,7 @@ def curso_delete_view(request, pk):
 @login_required
 @role_required('is_superuser', 'is_admin')
 def docente_list_view(request):
-    docentes = Docente.objects.all().order_by('apellido', 'nombre')
+    docentes = Docente.objects.all().order_by('user__last_name', 'user__first_name')
     context = {'docentes': docentes}
     materia_id = request.GET.get('from_materia')
     if materia_id:
@@ -224,7 +222,7 @@ def docente_list_from_materia_view(request, materia_pk):
     materia = get_object_or_404(Materia, pk=materia_pk)
     
     # 2. Obtenemos la lista de TODOS los docentes del sistema
-    docentes = Docente.objects.all().order_by('apellido', 'nombre')
+    docentes = Docente.objects.all().order_by('user__last_name', 'user__first_name')
     
     # 3. Preparamos y enviamos los datos a una NUEVA plantilla
     context = {
