@@ -15,6 +15,7 @@ from core.models import Docente
 
 # --- VISTAS PARA CARRERA ---
 @login_required
+@role_required('is_superuser', 'is_admin')
 def carrera_list_view(request):
     carreras = Carrera.objects.all().order_by('nombre')
     context = {'carreras': carreras}

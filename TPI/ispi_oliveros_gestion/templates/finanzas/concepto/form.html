@@ -7,7 +7,7 @@
     {{ form.as_p }}
     <div class="form-actions">
       <button type="submit" class="btn-primary">{% if concepto %}Actualizar{% else %}Guardar{% endif %}</button>
-      <a href="{% url 'finanzas:concepto_list' %}" class="btn-secondary">Cancelar</a>
+      <a href="{% url 'finanzas:concepto_pago_list' %}" class="btn-secondary">Cancelar</a>
     </div>
 </div>
 {% endblock %}

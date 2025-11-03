@@ -4,12 +4,14 @@
 {% block content %}
 
 <div class="container">
-  <div class="list-header">
-      <h2>Listado de Carreras</h2>
-      <a href="{% url 'academico:carrera_add' %}" class="btn-primary">Agregar Carrera</a>
-  </div>
+    <div class="list-header">
+        <h2>Listado de Carreras</h2>
+        {% if user.is_superuser %}
+            <a href="{% url 'academico:carrera_add' %}" class="btn-primary">Agregar Carrera</a>
+        {% endif %}
+    </div>
 
-  <table class="table-list">
+<table class="table-list">
     <thead>
         <tr>
             <th>Nombre</th>

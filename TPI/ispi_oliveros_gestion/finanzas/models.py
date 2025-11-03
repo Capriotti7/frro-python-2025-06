@@ -60,6 +60,6 @@ class Pago(models.Model):
             deuda_asociada.estado = "Pagado"
         else:
             if deuda_asociada.estado == "Vencido":
-                 deuda_asociada.estado = "Pendiente"
+                deuda_asociada.estado = "Pendiente"
         
         deuda_asociada.save()

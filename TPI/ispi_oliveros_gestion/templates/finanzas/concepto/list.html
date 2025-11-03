@@ -1,33 +1,45 @@
+<!-- templates/finanzas/concepto/list.html -->
+
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-  <div class="list-header">
-      <h2>Listado de Conceptos</h2>
-      <a href="{% url 'finanzas:concepto_add' %}" class="btn-primary">Agregar Concepto</a>
-  </div>
+    <div class="list-header">
+        <h2>Conceptos de Pago</h2>
+        <a href="{% url 'finanzas:concepto_pago_add' %}" class="btn-primary">Agregar Concepto</a>
+    </div>
 
-  <table class="table-list">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for concepto in conceptos %}
-        <tr>
-            <td>
-                <strong>{{ concepto.nombre }}</strong>
-            </td>
-            <td>{{ concepto.descripcion }}</td>
-            <td>
-                <a href="{% url 'finanzas:concepto_edit' pk=concepto.pk %}">Editar</a> |
-                <a href="{% url 'finanzas:concepto_delete' pk=concepto.pk %}" class="text-danger">Eliminar</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+    <table class="table-list">
+        <thead>
+            <tr>
+                <th>Descripción del Concepto</th>
+                <th>Monto Sugerido</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for concepto in conceptos %}
+            <tr>
+                <td>
+                    <strong>{{ concepto.descripcion }}</strong>
+                </td>
+                <td>
+                    ${{ concepto.monto_sugerido|floatformat:2 }}
+                </td>
+                <td>
+                    <a href="{% url 'finanzas:concepto_pago_edit' pk=concepto.pk %}">Editar</a> |
+                    <a href="{% url 'finanzas:concepto_pago_delete' pk=concepto.pk %}" class="text-danger">Eliminar</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">No hay conceptos de pago registrados.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="form-actions" style="margin-top: 20px;">
+        <a href="{% url 'finanzas:gestion_financiera' %}" class="btn-secondary">← Volver a Gestión Financiera</a>
+    </div>
 </div>
 {% endblock %}

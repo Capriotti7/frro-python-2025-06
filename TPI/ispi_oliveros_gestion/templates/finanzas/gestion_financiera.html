@@ -2,11 +2,11 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-    <h2>Gestión Financiera</h2>
-    <a href="{% url 'finanzas:concepto_pago_list' %}" class="btn-secondary">Gestionar Conceptos de Pago</a>
-    <p>Herramientas para la administración de finanzas del instituto.</p>
-
-    <div class="form-container mt-4">
+    <div class="list-header">
+        <h2 >Gestión Financiera</h2>
+        <a href="{% url 'finanzas:concepto_pago_list' %}" class="btn-primary">Gestionar Conceptos de Pago</a>
+    </div>
+    <div class="form-container">
         <h3>Generador de Deudas Mensuales</h3>
         <p>Esta herramienta creará un registro de deuda para todos los alumnos activos para el mes y concepto seleccionados.</p>
         
