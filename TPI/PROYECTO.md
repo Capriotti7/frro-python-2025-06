@@ -21,9 +21,27 @@ Definir la arquitectura del sistema y como interactuan sus diferentes componente
 * REQ001: El sistema debe permitir registrar la asistencia de los alumnos a cada clase de un curso.
 * REQ002: El sistema debe calcular automáticamente los recargos por demora en las cuotas vencidas y no pagadas.
 * REQ003: El sistema debe generar un listado de alumnos por curso, indicando el porcentaje de asistencia de cada uno.
-* REQ004: El sistema debe permitir la carga y almacenamiento de documentación digitalizada (escaneada) para cada alumno.
+* REQ004: El sistema debe permitir la carga y almacenamiento de documentación digitalizada (escaneada) para cada alumno y mostrarla en una ficha.
 * REQ005: El sistema debe calcular y mostrar la deuda total acumulada de cada alumno.
 * REQ006: El sistema debe calcular el tiempo promedio que tardan los alumnos en completar una carrera, desde su primera inscripción hasta la aprobación de la última materia.
+* REQ007: El sistema debe permitir a los usuarios (Administrativos, Docentes, Superusuarios) iniciar sesión utilizando su username y contraseña.
+* REQ008: El sistema debe permitir a un usuario autenticado cerrar su sesión de forma segura.
+* REQ009: El sistema debe restringir el acceso a las diferentes secciones (módulos ABM) basándose en el rol del usuario (Superusuario, Administrativo, Docente).
+* REQ010: Si un usuario intenta acceder a una URL para la cual no tiene permisos (ej. un Docente intentando editar una Carrera), el sistema debe mostrar una página de error 403 (Acceso Denegado).
+* REQ011: El sistema debe permitir solo al Superusuario crear nuevos registros de Docentes. Este proceso debe crear una cuenta de User (para el login) y un perfil Docente asociado.
+* REQ012: El sistema debe permitir al Superusuario gestionar (crear, editar, eliminar) las cuentas de usuario con rol Administrativo.
+* REQ013: El sistema debe proveer un formulario para registrar un nuevo alumno, almacenando DNI, nombre, apellido, email, fecha de nacimiento, teléfono, dirección, localidad y nacionalidad.
+* REQ014: El sistema debe permitir la edición de toda la información personal de un alumno previamente registrado.
+* REQ015: El sistema debe permitir la eliminación de un registro de alumno, solicitando confirmación antes de proceder.
+* REQ016: El sistema debe permitir el Alta, Baja (eliminación) y Modificación de las carreras ofrecidas por el instituto (nombre, duración, titulación, resolución), solo por el SuperUsuario.
+* REQ017: El sistema debe permitir el Alta, Baja y Modificación de las Materias, las cuales estan asociadas a una carrera específica.
+* REQ018: El sistema debe permitir el Alta, Baja y Modificación de los Cursos (comisiones), los cuales deben estar siempre asociados a una materia específica.
+* REQ019: El usuario debe poder navegar desde el listado de Carreras, seleccionar una, ver sus Materias, seleccionar una materia y ver sus Cursos.
+* REQ020: Al crear o editar un Curso, el sistema debe permitir seleccionar un Docente (del listado de docentes existentes) para asignarlo a dicho curso.
+* REQ021: El sistema debe mostrar un listado de todos los docentes, exhibiendo su nombre y apellido.
+* REQ022: El sistema debe permitir editar los datos de un docente y eliminar el registro de un docente a los SuperUsuarios.
+* REQ023: El sistema debe permitir registrar múltiples valores de cuota para una misma carrera, donde cada valor debe tener una "fecha de vigencia" que indique a partir de cuándo es válido.
+* REQ024: El sistema debe ser capaz de determinar y mostrar automáticamente el "valor de cuota actual" de una carrera, basándose en el último precio registrado.
 
 ### No Funcionales
 
