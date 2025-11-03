@@ -2,7 +2,8 @@
 
 from django import forms
 from django.contrib.auth.models import User
-from .models import Carrera, Materia, Curso
+from django.utils import timezone
+from .models import Carrera, Materia, Curso, ValorCarrera
 from core.models import Docente
 import datetime
 
@@ -10,6 +11,41 @@ class CarreraForm(forms.ModelForm):
     class Meta:
         model = Carrera
         fields = ['nombre', 'duracion_anios', 'tipo_titulacion', 'resolucion_ministerial']
+
+class ValorCarreraForm(forms.ModelForm):
+    """
+    Formulario para crear un nuevo registro en el historial de valores de una carrera.
+    """
+    class Meta:
+        model = ValorCarrera
+        # No incluimos 'carrera' porque la asignaremos automáticamente en la vista.
+        fields = ['valor_cuota', 'fecha_vigencia']
+        widgets = {
+            'fecha_vigencia': forms.DateInput(
+                attrs={'type': 'date'},
+                format='%Y-%m-%d' # Asegura que el formato sea compatible
+            ),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Hacemos los campos obligatorios por defecto un poco más amigables
+        self.fields['valor_cuota'].label = "Nuevo Valor de Cuota"
+        self.fields['fecha_vigencia'].label = "Vigente a partir de la Fecha"
+
+    def clean_fecha_vigencia(self):
+        """
+        Valida que la fecha de vigencia no sea una fecha pasada.
+        """
+        fecha = self.cleaned_data.get('fecha_vigencia')
+        
+        hoy = timezone.now().date()
+
+        # 3. Comparamos. Si la fecha es anterior a hoy, lanzamos un error.
+        if fecha and fecha < hoy:
+            raise forms.ValidationError("La fecha de vigencia no puede ser anterior al día de hoy.")
+        
+        return fecha
 
 class MateriaForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

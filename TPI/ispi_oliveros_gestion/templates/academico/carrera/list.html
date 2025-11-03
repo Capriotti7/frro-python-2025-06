@@ -32,6 +32,7 @@
             <td>{{ carrera.tipo_titulacion }}</td>
             <td>
                 <a href="{% url 'academico:carrera_edit' pk=carrera.pk %}">Editar</a> |
+                <a href="{% url 'academico:valor_carrera_list' carrera_pk=carrera.pk %}">Historial de Precios</a> |
                 <a href="{% url 'academico:carrera_delete' pk=carrera.pk %}" class="text-danger">Eliminar</a>
             </td>
         </tr>
