@@ -59,9 +59,6 @@ class RegistroConCodigoForm(forms.Form):
             Docente.objects.create(
                 user=user,
                 dni=data['dni'],
-                nombre=data['first_name'],
-                apellido=data['last_name'],
-                email=data['email'],
                 telefono=data['telefono']
             )
             
