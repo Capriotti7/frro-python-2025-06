@@ -12,6 +12,36 @@ class CarreraForm(forms.ModelForm):
         model = Carrera
         fields = ['nombre', 'duracion_anios', 'tipo_titulacion', 'resolucion_ministerial']
 
+    def clean(self):
+        """
+        Este método se usa para validaciones que involucran
+        múltiples campos del formulario a la vez.
+        """
+        cleaned_data = super().clean()
+
+        # 2. Prepara la consulta para buscar duplicados
+        query = Carrera.objects.filter(
+            nombre=cleaned_data.get('nombre'),
+            duracion_anios=cleaned_data.get('duracion_anios'),
+            tipo_titulacion=cleaned_data.get('tipo_titulacion'),
+            resolucion_ministerial=cleaned_data.get('resolucion_ministerial')
+        )
+
+        # Si 'self.instance.pk' existe, significa que estamos EDITANDO
+        # una carrera existente. Debemos excluir a ESA MISMA carrera
+        # de la búsqueda de duplicados.
+        if self.instance and self.instance.pk:
+            query = query.exclude(pk=self.instance.pk)
+
+        # 4. Si la consulta encuentra algún resultado (query.exists()),
+        # significa que ya existe otra carrera igual.
+        if query.exists():
+            raise forms.ValidationError(
+                "¡Error! Ya existe una carrera con exactamente los mismos datos."
+            )
+
+        return cleaned_data
+
 class ValorCarreraForm(forms.ModelForm):
     """
     Formulario para crear un nuevo registro en el historial de valores de una carrera.

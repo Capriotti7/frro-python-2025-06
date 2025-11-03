@@ -148,6 +148,7 @@ def materia_delete_view(request, pk):
 def curso_list_view(request, materia_pk):
     materia = get_object_or_404(Materia, pk=materia_pk)
     cursos = Curso.objects.filter(materia=materia).order_by('-ciclo_lectivo', 'cuatrimestre')
+    docentes_disponibles = Docente.objects.all().order_by('user__last_name', 'user__first_name')
     context = {
         'materia': materia,
         'cursos': cursos,}
