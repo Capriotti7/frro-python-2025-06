@@ -1,8 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.conf import settings
-from academico.models import Docente
-from core.models import Administrador
+from core.models import Administrador, Docente
 
 class RegistroConCodigoForm(forms.Form):
     # Campos del User de Django
