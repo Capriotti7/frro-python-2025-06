@@ -44,7 +44,7 @@
                 <td>{{ inscripcion.alumno.email }}</td>
                 <td class="actions">
                     <!-- Aquí podrías poner botones para "Ver Notas", "Dar de Baja", etc. en el futuro -->
-                    <a href="#">Ver Ficha</a>
+                    <a href="{% url 'alumnos:alumno_detail' pk=inscripcion.alumno.pk %}">Ver Ficha</a>
                 </td>
             </tr>
             {% empty %}
