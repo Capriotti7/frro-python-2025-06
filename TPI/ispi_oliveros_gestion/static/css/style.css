@@ -581,3 +581,64 @@ footer {
     grid-template-columns: 1fr;
   }
 }
+
+.actions-panel { display: flex; flex-direction: column; gap: 15px; }
+.full-width { width: 100%; box-sizing: border-box; text-align: center; }
+
+/* ==================
+   BUSCADOR LOCAL EN LISTAS ALUMNOS
+   ================== */
+.search-bar-local {
+  flex-grow: 1;
+  /* Hace que ocupe el espacio disponible en el medio */
+  display: flex;
+  justify-content: center;
+  /* Centra el formulario */
+  padding: 0 20px;
+}
+
+.search-form-local {
+  display: flex;
+  width: 100%;
+  max-width: 500px;
+}
+
+.search-form-local input[type="text"] {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-right: none;
+  border-radius: 20px 0 0 20px;
+}
+
+.search-form-local input[type="text"]:focus {
+  outline: none;
+  border-color: #b30000;
+}
+
+.search-form-local button {
+  padding: 0 20px;
+  border: 1px solid #b30000;
+  background-color: #b30000;
+  color: white;
+  border-radius: 0 20px 20px 0;
+  cursor: pointer;
+}
+
+.btn-danger-small {
+  background-color: #b30000;
+  color: white;
+  padding: 5px 10px;
+  font-size: 0.8em;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Layout para páginas con dos columnas (ej. Historial de Precios) */
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr; /* Columna del form más pequeña */
+  gap: 30px;
+  margin-top: 20px;
+}

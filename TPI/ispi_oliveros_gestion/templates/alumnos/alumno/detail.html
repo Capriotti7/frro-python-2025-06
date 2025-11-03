@@ -83,7 +83,7 @@
                 <tr>
                     <td>{{ deuda.concepto.descripcion }}</td>
                     <td>{{ deuda.fecha_vencimiento|date:"d/m/Y" }}</td>
-                    <td>${{ deuda.monto|floatformat:2 }}</td>
+                    <td>${{ deuda.monto_final|floatformat:2 }}</td>
                     <td><span class="status status-{{ deuda.estado|lower }}">{{ deuda.estado }}</span></td>
                     <td>
                         <a href="{% url 'finanzas:registrar_pago' deuda_pk=deuda.pk %}" class="btn-primary-small">Registrar Pago</a> 

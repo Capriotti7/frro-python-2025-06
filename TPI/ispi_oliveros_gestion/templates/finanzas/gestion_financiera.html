@@ -3,41 +3,93 @@
 {% block content %}
 <div class="container">
     <div class="list-header">
-        <h2 >Gestión Financiera</h2>
-        <a href="{% url 'finanzas:concepto_pago_list' %}" class="btn-primary">Gestionar Conceptos de Pago</a>
+        <h2 >Panel de Gestión Financiera</h2>
     </div>
-    <div class="form-container">
-        <h3>Generador de Deudas Mensuales</h3>
-        <p>Esta herramienta creará un registro de deuda para todos los alumnos activos para el mes y concepto seleccionados.</p>
-        
-        <form action="{% url 'finanzas:generar_deudas' %}" method="post">
-            {% csrf_token %}
-            <div class="detail-grid">
-                <div class="detail-item">
-                    <label for="id_concepto">Concepto de Pago</label>
-                    <select name="concepto" id="id_concepto" required>
-                        {% for concepto in conceptos %}
-                        <option value="{{ concepto.pk }}">{{ concepto.descripcion }} - ${{ concepto.monto_sugerido|floatformat:2 }}</option>
+
+    <!-- Tarjetas de Resumen -->
+    <div class="summary-grid">
+        <div class="summary-card saldo">
+            <label>Monto Total Adeudado</label>
+            <p>${{ total_adeudado|floatformat:2 }}</p>
+        </div>
+        <div class="summary-card total">
+            <label>Alumnos con Deuda</label>
+            <p>{{ cantidad_deudores }}</p>
+        </div>
+    </div>
+    
+    <div class="detail-grid mt-4">
+        <!-- Generador por Carrera -->
+        <div class="form-container">
+            <h3>Generar Cuotas por Carrera</h3>
+            <p>Crea la cuota mensual para todos los alumnos de una carrera específica, usando el último valor vigente.</p>
+            <form action="{% url 'finanzas:generar_deudas_carrera' %}" method="post" class="tool-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_carrera">Seleccionar Carrera:</label>
+                    <select name="carrera" id="id_carrera" required>
+                        <option value="" disabled selected>---</option>
+                        {% for carrera in carreras %}
+                        <option value="{{ carrera.pk }}">{{ carrera.nombre }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <div class="detail-item">
-                    <label for="id_mes">Mes Correspondiente</label>
-                    <input type="number" name="mes" id="id_mes" min="1" max="12" required>
+                <div class="form-group">
+                    <label for="id_mes_carrera">Mes (1-12):</label>
+                    <input type="number" name="mes" id="id_mes_carrera" min="1" max="12" required>
                 </div>
-                <div class="detail-item">
-                    <label for="id_anio">Año Correspondiente</label>
-                    <input type="number" name="anio" id="id_anio" min="2024" max="2040" required>
+                <div class="form-group">
+                    <label for="id_anio_carrera">Año:</label>
+                    <input type="number" name="anio" id="id_anio_carrera" min="2024" max="2040" required>
                 </div>
-                <div class="detail-item">
-                    <label for="id_vencimiento">Fecha de Vencimiento</label>
-                    <input type="date" name="vencimiento" id="id_vencimiento" required>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Generar Cuotas</button>
                 </div>
+            </form>
+        </div>
+
+        <!-- Generador Masivo General -->
+        <div class="form-container">
+            <h3>Generador de Deudas Generales</h3>
+            <form action="{% url 'finanzas:generar_deudas' %}" method="post">
+                {% csrf_token %}
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <label for="id_concepto">Concepto de Pago</label>
+                        <select name="concepto" id="id_concepto" required>
+                            {% for concepto in conceptos %}
+                            <option value="{{ concepto.pk }}">{{ concepto.descripcion }} - ${{ concepto.monto_sugerido|floatformat:2 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="detail-item">
+                        <label for="id_mes">Mes Correspondiente</label>
+                        <input type="number" name="mes" id="id_mes" min="1" max="12" required>
+                    </div>
+                    <div class="detail-item">
+                        <label for="id_anio">Año Correspondiente</label>
+                        <input type="number" name="anio" id="id_anio" min="2024" max="2040" required>
+                    </div>
+                    <div class="detail-item">
+                        <label for="id_vencimiento">Fecha de Vencimiento</label>
+                        <input type="date" name="vencimiento" id="id_vencimiento" required>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-danger">Generar Deudas Masivamente</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Panel de Acciones -->
+        <div class="form-container">
+            <h3>Acciones y Reportes</h3>
+            <div class="actions-panel">
+                <a href="{% url 'finanzas:concepto_pago_list' %}" class="btn-primary">Gestionar Conceptos de Pago</a>
+                <a href="{% url 'finanzas:listado_deudores' %}" class="btn-primary">Ver Reporte de Deudores</a>
+                <a href="{% url 'finanzas:deuda_list' %}" class="btn-primary">Ver Todas las Deudas Generadas</a>
             </div>
-            <div class="form-actions">
-                <button type="submit" class="btn-danger">Generar Deudas Masivamente</button>
-            </div>
-        </form>
-    </div>
+        </div>
+    </div> 
 </div>
-{% endblock %}
+{% endblock %} 

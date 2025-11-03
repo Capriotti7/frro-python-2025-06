@@ -1,23 +1,19 @@
-<!-- templates/academico/carrera/valores_historicos.html -->
-
 {% extends "base.html" %}
 
 {% block content %}
 <div class="container">
-    <div class="page-header">
+    <div class="list-header">
         <div>
             <h2>Historial de Precios de Cuota</h2>
             <p style="margin: 0; font-size: 1.2em; color: #555;">Carrera: <strong>{{ carrera.nombre }}</strong></p>
         </div>
     </div>
 
-    <hr class="section-divider">
-
     <div class="content-grid">
-        <!-- Columna Izquierda: Formulario para Agregar Nuevo Valor -->
-        <div class="tool-section">
+        <!-- Columna Izquierda: Formulario -->
+        <div class="form-container">
             <h3>Agregar Nuevo Valor</h3>
-            <form method="post" class="tool-form">
+            <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <div class="form-actions">
@@ -26,9 +22,9 @@
             </form>
         </div>
 
-        <!-- Columna Derecha: Tabla con el Historial -->
-        <div class="tool-section">
-            <h3>Historial de Valores Registrados</h3>
+        <!-- Columna Derecha: Tabla Historial -->
+        <div>
+            <h3>Historial de Valores</h3>
             <table class="table-list">
                 <thead>
                     <tr>
@@ -44,7 +40,7 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="2">No hay valores históricos registrados para esta carrera.</td>
+                        <td colspan="2">No hay valores históricos registrados.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -55,6 +51,5 @@
     <div class="form-actions" style="margin-top: 30px;">
         <a href="{% url 'academico:carrera_list' %}" class="btn-secondary">← Volver al Listado de Carreras</a>
     </div>
-
 </div>
 {% endblock %}

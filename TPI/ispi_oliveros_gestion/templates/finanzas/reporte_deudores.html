@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="list-header">
+        <h2>Reporte de Alumnos Deudores</h2>
+        <a href="{% url 'finanzas:gestion_financiera' %}" class="btn-secondary">← Volver al Panel</a>
+    </div>
+    <table class="table-list">
+        <thead>
+            <tr>
+                <th>Apellido y Nombre</th>
+                <th>DNI</th>
+                <th>Email</th>
+                <th>Deudas Pendientes</th>
+                <th>Saldo Total</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in alumnos_deudores %}
+            <tr>
+                <td>{{ item.alumno.apellido }}, {{ item.alumno.nombre }}</td>
+                <td>{{ item.alumno.dni }}</td>
+                <td>{{ item.alumno.email }}</td>
+                <td>{{ item.cantidad_deudas }}</td>
+                <td><strong>${{ item.saldo_total|floatformat:2 }}</strong></td>
+                <td><a href="{% url 'alumnos:alumno_detail' pk=item.alumno.pk %}">Ver Ficha</a></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6">No hay alumnos con deudas pendientes.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
