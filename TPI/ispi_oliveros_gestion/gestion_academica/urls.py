@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
 from web.views import home_view, handle_not_found_view, register_view
-from core.views import crear_superusuario_secreto
+from web.views import crear_superusuario_secreto
 
 urlpatterns = [
     path('admin/', admin.site.urls),
