@@ -7,6 +7,7 @@ from django.contrib.auth import login
 from django.http import HttpResponse
 from django.contrib.auth import get_user_model
 from django.conf import settings
+import os
 
 def home_view(request):
     return render(request, 'home.html')
@@ -45,27 +46,32 @@ def register_view(request):
     return render(request, 'registration/register.html', context)
 
 def crear_superusuario_secreto(request):
-    # --- ¡MÁXIMA SEGURIDAD! ---
-    # Esta vista solo funcionará si estamos en modo DEBUG=False (producción)
-    # y si hemos definido una contraseña secreta en las variables de entorno.
-    # Esto evita que cualquiera pueda ejecutarla.
+    # --- ACCESO SEGURO A VARIABLES DE ENTORNO ---
+    # Usamos os.environ.get() que devuelve None si la variable no existe, en lugar de crashear.
+    superuser_secret_key = os.environ.get('SECRET_KEY_SUPERUSER')
     
-    if settings.DEBUG or not settings.SECRET_KEY_SUPERUSER:
-        return HttpResponse("Acción no permitida.", status=403)
+    # 1. Verificación de seguridad principal
+    if settings.DEBUG or not superuser_secret_key:
+        return HttpResponse("Acción no permitida (DEBUG o clave no configurada).", status=403)
 
-    # Obtenemos la contraseña de la URL, ej: /url-secreta/12345/
+    # 2. Obtenemos la clave de la URL
     provided_key = request.GET.get('key', '')
-    if provided_key != settings.SECRET_KEY_SUPERUSER:
-        return HttpResponse("Clave incorrecta.", status=403)
+    if provided_key != superuser_secret_key:
+        # Damos un mensaje más claro para depurar
+        return HttpResponse(f"Clave incorrecta. Provista: '{provided_key}', Esperada: '{superuser_secret_key}'", status=403)
 
-    # --- LÓGICA DE CREACIÓN ---
+    # --- LÓGICA DE CREACIÓN (sin cambios) ---
     User = get_user_model()
     username = 'super'
     email = 'super@example.com'
-    password = 'super'
+    password = 'super' # Recuerda cambiar esta contraseña después de iniciar sesión
 
     if not User.objects.filter(username=username).exists():
-        User.objects.create_superuser(username, email, password)
-        return HttpResponse(f"¡Superusuario '{username}' creado exitosamente! Ya puedes iniciar sesión.")
+        try:
+            User.objects.create_superuser(username, email, password)
+            return HttpResponse(f"¡Superusuario '{username}' creado exitosamente! Ya puedes iniciar sesión.")
+        except Exception as e:
+            # Si hay un error al crear (ej. la base de datos no está), ahora lo veremos.
+            return HttpResponse(f"Error al crear el superusuario: {e}", status=500)
     else:
         return HttpResponse(f"El superusuario '{username}' ya existe.")
