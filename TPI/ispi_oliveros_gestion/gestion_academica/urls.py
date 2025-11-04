@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
-from web.views import home_view, handle_not_found_view, register_view, crear_superusuario_secreto
+from web.views import home_view, handle_not_found_view, register_view
 
 urlpatterns = [
     # 1. Rutas principales de la aplicación

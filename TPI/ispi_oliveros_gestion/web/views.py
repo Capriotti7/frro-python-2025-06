@@ -2,7 +2,7 @@
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import RegistroConCodigoForm
+from .forms import SolicitudRegistroForm
 from django.contrib.auth import login
 from django.http import HttpResponse
 from django.contrib.auth import get_user_model
@@ -21,7 +21,7 @@ def handle_not_found_view(request):
     response.status_code = 404
     return response
 
-def register_view(request):
+"""def register_view(request):
     if request.user.is_authenticated:
         return redirect('dashboard') 
 
@@ -74,4 +74,20 @@ def crear_superusuario_secreto(request):
             # Si hay un error al crear (ej. la base de datos no está), ahora lo veremos.
             return HttpResponse(f"Error al crear el superusuario: {e}", status=500)
     else:
-        return HttpResponse(f"El superusuario '{username}' ya existe.")
+        return HttpResponse(f"El superusuario '{username}' ya existe.") """
+
+def register_view(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard') 
+
+    if request.method == 'POST':
+        form = SolicitudRegistroForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Solicitud Enviada|Tu solicitud de registro ha sido enviada y está pendiente de aprobación.')
+            return redirect('login') # Lo enviamos al login
+    else:
+        form = SolicitudRegistroForm()
+
+    context = {'form': form}
+    return render(request, 'registration/register.html', context)

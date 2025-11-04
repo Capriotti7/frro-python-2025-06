@@ -18,3 +18,33 @@ class Docente(models.Model):
     def __str__(self):
         return f"Perfil Docente de: {self.user.username}"
 
+class SolicitudRegistro(models.Model):
+    PERFILES = (
+        ('ADMIN', 'Administrativo'),
+        ('DOCENTE', 'Docente'),
+    )
+    ESTADOS = (
+        ('PENDIENTE', 'Pendiente'),
+        ('APROBADO', 'Aprobado'),
+        ('RECHAZADO', 'Rechazado'),
+    )
+
+    # Datos para el User de Django
+    username = models.CharField(max_length=150, unique=True)
+    email = models.EmailField(unique=True)
+    first_name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150)
+    # Guardamos el hash de la contraseña, no el texto plano
+    password_hash = models.CharField(max_length=128) 
+
+    # Datos específicos del rol
+    dni = models.CharField(max_length=20, blank=True, null=True, unique=True)
+    telefono = models.CharField(max_length=20, blank=True, null=True)
+    
+    # Datos de la solicitud
+    tipo_perfil = models.CharField(max_length=10, choices=PERFILES)
+    estado = models.CharField(max_length=10, choices=ESTADOS, default='PENDIENTE')
+    fecha_solicitud = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Solicitud de {self.username} como {self.get_tipo_perfil_display()}"

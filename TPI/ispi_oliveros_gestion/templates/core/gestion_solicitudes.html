@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <div class="list-header">
+        <h2>Solicitudes de Registro Pendientes</h2>
+    </div>
+    <table class="table-list">
+        <thead>
+            <tr>
+                <th>Usuario Solicitado</th>
+                <th>Nombre Completo</th>
+                <th>Rol Solicitado</th>
+                <th>DNI (si aplica)</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for solicitud in solicitudes %}
+            <tr>
+                <td>{{ solicitud.username }}</td>
+                <td>{{ solicitud.last_name }}, {{ solicitud.first_name }}</td>
+                <td>{{ solicitud.get_tipo_perfil_display }}</td>
+                <td>{{ solicitud.dni|default:"N/A" }}</td>
+                <td class="actions">
+                    <form action="{% url 'aprobar_solicitud' solicitud.pk %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-primary-small">Aprobar</button>
+                    </form>
+                    <form action="{% url 'rechazar_solicitud' solicitud.pk %}" method="post" style="display:inline;" onsubmit="return confirm('¿Rechazar esta solicitud?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-danger-small">Rechazar</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No hay solicitudes de registro pendientes.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="form-actions" style="margin-top: 20px;">
+        <a href="{% url 'dashboard' %}" class="btn-secondary">← Volver al Dashboard</a>
+    </div>
+</div>
+{% endblock %}
