@@ -20,7 +20,7 @@ urlpatterns = [
     path('gestion/finanzas/', include('finanzas.urls')),
 
     # 4. UURL SECRETA PARA CREAR SUPERUSUARIO
-    path('crear-primer-superusuario-render-9xyz789/', crear_superusuario_secreto, name='crear_su_secreto'),
+    #path('crear-primer-superusuario-render-9xyz789/', crear_superusuario_secreto, name='crear_su_secreto'),
 
     # 5. El "Atrapa-Todo" para 404
     re_path(r'^.*$', handle_not_found_view, name='catch_all'),
