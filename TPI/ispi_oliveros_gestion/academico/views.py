@@ -448,21 +448,27 @@ def curso_detail_view(request, curso_pk):
 def curso_inscribir_alumno_list_view(request, curso_pk):
     curso = get_object_or_404(Curso, pk=curso_pk)
 
-    # 1. Obtener los IDs de los alumnos que YA están inscriptos en este curso
+    # 1. Obtener el parámetro de búsqueda (ahora acepta apellido, nombre o DNI)
+    query = request.GET.get('q', '')
+    
+    # 2. Obtener los IDs de los alumnos que YA están inscriptos en este curso
     alumnos_inscriptos_ids = InscripcionCurso.objects.filter(curso=curso).values_list('alumno_id', flat=True)
 
-    # 2. Obtener todos los alumnos EXCLUYENDO a los que ya están inscriptos
+    # 3. Obtener todos los alumnos EXCLUYENDO a los que ya están inscriptos
     alumnos_disponibles = Alumno.objects.exclude(id__in=alumnos_inscriptos_ids)
 
-    # 3. Lógica de Búsqueda por DNI
-    search_dni = request.GET.get('dni_search', '') # '' es el valor por defecto
-    if search_dni:
-        alumnos_disponibles = alumnos_disponibles.filter(dni__icontains=search_dni)
+    # 4. Lógica de Búsqueda mejorada (por Apellido, Nombre o DNI)
+    if query:
+        alumnos_disponibles = alumnos_disponibles.filter(
+            Q(apellido__icontains=query) |
+            Q(nombre__icontains=query) |
+            Q(dni__icontains=query)
+        )
 
     context = {
         'curso': curso,
         'alumnos': alumnos_disponibles,
-        'search_dni': search_dni, # Para mantener el valor en la barra de búsqueda
+        'query': query,  
     }
     return render(request, 'academico/curso/inscribir_list.html', context)
 

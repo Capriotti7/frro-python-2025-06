@@ -6,16 +6,14 @@
 <div class="container">
     <div class="list-header">
         <h2>Listado de Alumnos</h2>
-
-        <!-- FORMULARIO DE BÚSQUEDA INTEGRADO -->
-        <div class="search-bar-local">
-            <form method="get" class="search-form-local">
-                <input type="text" name="q" placeholder="Buscar por Apellido, Nombre o DNI..." value="{{ query }}">
-                <button type="submit">Buscar</button>
-            </form>
-        </div>
-
         <a href="{% url 'alumnos:alumno_add' %}" class="btn-primary">Agregar Alumno</a>
+    </div>
+        <!-- FORMULARIO DE BÚSQUEDA INTEGRADO -->
+    <div class="search-bar-local">
+        <form method="get" class="search-form-local">
+            <input type="text" name="q" placeholder="Buscar por Apellido, Nombre o DNI..." value="{{ query }}">
+            <button type="submit">Buscar</button>
+        </form>
     </div>
 
     <table class="table-list">

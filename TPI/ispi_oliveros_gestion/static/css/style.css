@@ -152,7 +152,7 @@ footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .btn-primary {
@@ -584,16 +584,12 @@ footer {
 .actions-panel { display: flex; flex-direction: column; gap: 15px; }
 .full-width { width: 100%; box-sizing: border-box; text-align: center; }
 
-/* ==================
-   BUSCADOR LOCAL EN LISTAS ALUMNOS
-   ================== */
+/* ================== BUSCADOR LOCAL EN LISTAS ALUMNOS ================== */
+
 .search-bar-local {
-  flex-grow: 1;
-  /* Hace que ocupe el espacio disponible en el medio */
-  display: flex;
-  justify-content: center;
-  /* Centra el formulario */
-  padding: 0 20px;
+  width: 100%;
+  text-align: left;
+  margin: 10px 0 30px 0;
 }
 
 .search-form-local {

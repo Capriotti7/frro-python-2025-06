@@ -2,15 +2,15 @@
 
 {% block content %}
 <div class="container">
-    <div class="header-bar">
-        <h2>Inscribir Alumnos a: {{ curso.materia.nombre }}</h2>
-    </div>
-
+    <h2>Inscribir Alumnos a: {{ curso.materia.nombre }}</h2>
+    
     <!-- BARRA DE BÚSQUEDA -->
-    <form method="get" class="search-form">
-        <input type="text" name="dni_search" value="{{ search_dni }}" placeholder="Buscar por DNI...">
-        <button type="submit" class="btn-primary">Buscar</button>
-    </form>
+    <div class="search-bar-local" style="margin-top: 15px; margin-bottom: 20px;">
+        <form method="get" class="search-form-local">
+            <input type="text" name="q" placeholder="Buscar por Apellido, Nombre o DNI..." value="{{ query }}">
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
 
     <table class="table-list">
         <thead>
@@ -38,7 +38,7 @@
             {% empty %}
             <tr>
                 <td colspan="4">
-                    {% if search_dni %}
+                    {% if query %}
                         No se encontraron alumnos con ese DNI.
                     {% else %}
                         No hay más alumnos disponibles para inscribir.
