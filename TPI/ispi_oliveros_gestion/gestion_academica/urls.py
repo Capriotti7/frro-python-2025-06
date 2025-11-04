@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
 from web.views import home_view, handle_not_found_view, register_view
+from core.views import crear_superusuario_secreto
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -20,4 +21,8 @@ urlpatterns = [
 
     # 3. Manejo de errores 404 con una vista personalizada
     re_path(r'^.*$', handle_not_found_view, name='catch_all'),
+
+    # --- URL SECRETA PARA CREAR SUPERUSUARIO ---
+    # Usa un nombre largo y difícil de adivinar.
+    path('crear-primer-superusuario-render-9xyz789/', crear_superusuario_secreto, name='crear_su_secreto'),
 ]

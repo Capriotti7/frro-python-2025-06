@@ -4,6 +4,9 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import RegistroConCodigoForm
 from django.contrib.auth import login
+from django.http import HttpResponse
+from django.contrib.auth import get_user_model
+from django.conf import settings
 
 def home_view(request):
     return render(request, 'home.html')
@@ -40,3 +43,29 @@ def register_view(request):
 
     context = {'form': form}
     return render(request, 'registration/register.html', context)
+
+def crear_superusuario_secreto(request):
+    # --- ¡MÁXIMA SEGURIDAD! ---
+    # Esta vista solo funcionará si estamos en modo DEBUG=False (producción)
+    # y si hemos definido una contraseña secreta en las variables de entorno.
+    # Esto evita que cualquiera pueda ejecutarla.
+    
+    if settings.DEBUG or not settings.SECRET_KEY_SUPERUSER:
+        return HttpResponse("Acción no permitida.", status=403)
+
+    # Obtenemos la contraseña de la URL, ej: /url-secreta/12345/
+    provided_key = request.GET.get('key', '')
+    if provided_key != settings.SECRET_KEY_SUPERUSER:
+        return HttpResponse("Clave incorrecta.", status=403)
+
+    # --- LÓGICA DE CREACIÓN ---
+    User = get_user_model()
+    username = 'admin'
+    email = 'admin@example.com'
+    password = 'admin'
+
+    if not User.objects.filter(username=username).exists():
+        User.objects.create_superuser(username, email, password)
+        return HttpResponse(f"¡Superusuario '{username}' creado exitosamente! Ya puedes iniciar sesión.")
+    else:
+        return HttpResponse(f"El superusuario '{username}' ya existe.")
