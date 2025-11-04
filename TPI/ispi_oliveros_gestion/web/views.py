@@ -60,9 +60,9 @@ def crear_superusuario_secreto(request):
 
     # --- LÓGICA DE CREACIÓN ---
     User = get_user_model()
-    username = 'admin'
-    email = 'admin@example.com'
-    password = 'admin'
+    username = 'super'
+    email = 'super@example.com'
+    password = 'super'
 
     if not User.objects.filter(username=username).exists():
         User.objects.create_superuser(username, email, password)
