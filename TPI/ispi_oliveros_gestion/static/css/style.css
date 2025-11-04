@@ -442,7 +442,6 @@ footer {
   justify-content: center;
   align-items: center;
   padding: 40px 20px;
-  background-color: #f0f2f5;
   min-height: 70vh;
 }
 
@@ -641,4 +640,57 @@ footer {
   grid-template-columns: 1fr 2fr; /* Columna del form más pequeña */
   gap: 30px;
   margin-top: 20px;
+}
+
+.public-home-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  /* Ocupa casi toda la pantalla */
+  text-align: center;
+}
+
+.hero-section {
+  max-width: 800px;
+  padding: 40px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.hero-logo {
+  max-width: 150px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+}
+
+.hero-content h1 {
+  font-size: 2.2em;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+}
+
+.hero-content h2 {
+  font-size: 1.5em;
+  font-weight: 400;
+  color: var(--primary-color);
+  /* Usa tu color primario */
+  margin: 5px 0 20px 0;
+}
+
+.hero-content p {
+  font-size: 1.1em;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.btn-login {
+  font-size: 1.2em;
+  padding: 15px 30px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
 }
