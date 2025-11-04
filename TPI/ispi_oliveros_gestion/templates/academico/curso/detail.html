@@ -43,7 +43,7 @@
                 <td>{{ inscripcion.alumno }}</td>
                 <td>{{ inscripcion.alumno.email }}</td>
                 <td class="actions">
-                    <a href="{% url 'alumnos:alumno_detail' pk=inscripcion.alumno.pk %}">Ver Ficha</a>   # POR AHORA LO DEJAMOS ASI, PERO SE PODRIAN REGISTRAR NOTAS ACA
+                    <a href="{% url 'alumnos:alumno_detail' pk=inscripcion.alumno.pk %}">Ver Ficha</a> 
                 </td>
             </tr>
             {% empty %}

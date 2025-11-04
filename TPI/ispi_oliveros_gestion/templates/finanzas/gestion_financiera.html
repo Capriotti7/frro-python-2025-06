@@ -25,22 +25,24 @@
             <p>Crea la cuota mensual para todos los alumnos de una carrera específica, usando el último valor vigente.</p>
             <form action="{% url 'finanzas:generar_deudas_carrera' %}" method="post" class="tool-form">
                 {% csrf_token %}
-                <div class="form-group">
-                    <label for="id_carrera">Seleccionar Carrera:</label>
-                    <select name="carrera" id="id_carrera" required>
-                        <option value="" disabled selected>---</option>
-                        {% for carrera in carreras %}
-                        <option value="{{ carrera.pk }}">{{ carrera.nombre }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="id_mes_carrera">Mes (1-12):</label>
-                    <input type="number" name="mes" id="id_mes_carrera" min="1" max="12" required>
-                </div>
-                <div class="form-group">
-                    <label for="id_anio_carrera">Año:</label>
-                    <input type="number" name="anio" id="id_anio_carrera" min="2024" max="2040" required>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <label for="id_carrera">Seleccionar Carrera:</label>
+                        <select name="carrera" id="id_carrera" required>
+                            <option value="" disabled selected>---</option>
+                            {% for carrera in carreras %}
+                            <option value="{{ carrera.pk }}">{{ carrera.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="detail-item">
+                        <label for="id_mes_carrera">Mes (1-12):</label>
+                        <input type="number" name="mes" id="id_mes_carrera" min="1" max="12" required>
+                    </div>
+                    <div class="detail-item">
+                        <label for="id_anio_carrera">Año:</label>
+                        <input type="number" name="anio" id="id_anio_carrera" min="2024" max="2040" required>
+                    </div>
                 </div>
                 <div class="form-actions">
                     <button type="submit" class="btn-primary">Generar Cuotas</button>
@@ -90,6 +92,9 @@
                 <a href="{% url 'finanzas:deuda_list' %}" class="btn-primary">Ver Todas las Deudas Generadas</a>
             </div>
         </div>
-    </div> 
+    </div>
+    <div class="form-actions" style="margin-top: 20px;">
+        <a href="{% url 'dashboard' %}" class="btn-secondary">← Volver al Dashboard</a>
+    </div>
 </div>
 {% endblock %} 
