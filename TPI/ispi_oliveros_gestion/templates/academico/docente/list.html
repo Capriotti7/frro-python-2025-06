@@ -35,10 +35,7 @@
         </tbody>
     </table>
     <div class="form-actions" style="margin-top: 20px;">
-        {% if materia_origen %}
-            <!-- Este botón solo aparece si venimos desde una materia específica -->
-            <a href="{% url 'academico:curso_list' materia_pk=materia_origen.pk %}" class="btn-secondary">← Volver a la Materia ({{ materia_origen.nombre }})</a>
-        {% endif %}
+        <a href="{% url 'dashboard' %}" class="btn-secondary">← Volver al Dashboard</a>
     </div>
 </div>
 {% endblock %}
