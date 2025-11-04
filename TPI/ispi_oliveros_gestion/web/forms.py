@@ -1,9 +1,10 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.conf import settings
-from core.models import Administrador, Docente
+from core.models import Administrador, Docente, SolicitudRegistro
+from django.contrib.auth.hashers import make_password
 
-class RegistroConCodigoForm(forms.Form):
+"""class RegistroConCodigoForm(forms.Form):
     # Campos del User de Django
     username = forms.CharField(max_length=150, required=True, label="Nombre de Usuario")
     password = forms.CharField(widget=forms.PasswordInput, required=True, label="Contraseña")
@@ -19,14 +20,14 @@ class RegistroConCodigoForm(forms.Form):
     telefono = forms.CharField(max_length=20, required=False)
 
     def clean_codigo_registro(self):
-        """ Valida que el código de registro sea uno de los permitidos. """
+        #Valida que el código de registro sea uno de los permitidos.
         codigo = self.cleaned_data.get('codigo_registro')
         if codigo not in [settings.CODIGO_REGISTRO_ADMIN, settings.CODIGO_REGISTRO_DOCENTE]:
             raise forms.ValidationError("El código de registro no es válido.")
         return codigo
 
     def clean(self):
-        """ Valida que los campos de docente sean obligatorios si el código es de docente. """
+        #Valida que los campos de docente sean obligatorios si el código es de docente.
         cleaned_data = super().clean()
         codigo = cleaned_data.get('codigo_registro')
 
@@ -38,7 +39,7 @@ class RegistroConCodigoForm(forms.Form):
         return cleaned_data
 
     def save(self):
-        """ Crea el User y el perfil correspondiente según el código. """
+        #Crea el User y el perfil correspondiente según el código.
         data = self.cleaned_data
         
         # 1. Crear el objeto User
@@ -65,24 +66,51 @@ class RegistroConCodigoForm(forms.Form):
         return user
     
     def clean_username(self):
-        """ Valida que el nombre de usuario no esté ya en uso. """
+        #Valida que el nombre de usuario no esté ya en uso
         username = self.cleaned_data.get('username')
         if User.objects.filter(username__iexact=username).exists():
             raise forms.ValidationError("Este nombre de usuario ya está en uso. Por favor, elige otro.")
         return username
 
     def clean_email(self):
-        """ Valida que el correo electrónico no esté ya en uso. """
+        #Valida que el correo electrónico no esté ya en uso.
         email = self.cleaned_data.get('email')
         if User.objects.filter(email__iexact=email).exists():
             raise forms.ValidationError("Esta dirección de correo electrónico ya está registrada.")
         return email
 
     def clean_dni(self):
-        """ Valida que el DNI no esté ya en uso por otro docente. """
+        #Valida que el DNI no esté ya en uso por otro docente.
         dni = self.cleaned_data.get('dni')
         # Solo validamos el DNI si se está intentando registrar un docente
         if self.cleaned_data.get('codigo_registro') == settings.CODIGO_REGISTRO_DOCENTE:
             if Docente.objects.filter(dni=dni).exists():
                 raise forms.ValidationError("Este DNI ya está registrado a nombre de otro docente.")
-        return dni
+        return dni """
+# El formulario ha sido comentado temporalmente.
+
+class SolicitudRegistroForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput, label="Contraseña")
+
+    class Meta:
+        model = SolicitudRegistro
+        fields = [
+            'username', 'email', 'first_name', 'last_name', 'password',
+            'tipo_perfil', 'dni', 'telefono'
+        ]
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if cleaned_data.get('tipo_perfil') == 'DOCENTE':
+            if not cleaned_data.get('dni'):
+                self.add_error('dni', 'El DNI es obligatorio para registrarse como docente.')
+        return cleaned_data
+
+    def save(self, commit=True):
+        # Sobreescribimos el save para hashear la contraseña
+        solicitud = super().save(commit=False)
+        solicitud.password_hash = make_password(self.cleaned_data["password"])
+        
+        if commit:
+            solicitud.save()
+        return solicitud
