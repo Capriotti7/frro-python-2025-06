@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
+from django.conf import settings
+from django.conf.urls.static import static
 from web.views import home_view, handle_not_found_view, register_view
 
 urlpatterns = [
@@ -25,3 +27,8 @@ urlpatterns = [
     # 5. El "Atrapa-Todo" para 404
     re_path(r'^.*$', handle_not_found_view, name='catch_all'),
 ]
+
+if settings.DEBUG:
+    urlpatterns = urlpatterns[:-1] + \
+                  static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + \
+                  [re_path(r'^.*$', handle_not_found_view, name='catch_all')]

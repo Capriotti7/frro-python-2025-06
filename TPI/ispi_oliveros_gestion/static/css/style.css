@@ -690,3 +690,7 @@ footer {
   border-radius: 8px;
   font-weight: 600;
 }
+.status-aprobado {
+  background-color: #28a745 !important;
+  color: #ffffff !important;
+}

@@ -1,7 +1,7 @@
 # alumnos/forms.py
 
 from django import forms
-from .models import Alumno
+from .models import Alumno, DocumentacionAlumno
 
 class AlumnoForm(forms.ModelForm):
     class Meta:
@@ -19,6 +19,16 @@ class AlumnoForm(forms.ModelForm):
         ]
         widgets = {
             'fecha_nacimiento': forms.DateInput(
+                attrs={'type': 'date', 'placeholder': 'AAAA-MM-DD'}
+            ),
+        }
+
+class DocumentacionForm(forms.ModelForm):
+    class Meta:
+        model = DocumentacionAlumno
+        fields = ['nombre', 'fecha_entrega', 'estado', 'archivo_adjunto']
+        widgets = {
+            'fecha_entrega': forms.DateInput(
                 attrs={'type': 'date', 'placeholder': 'AAAA-MM-DD'}
             ),
         }

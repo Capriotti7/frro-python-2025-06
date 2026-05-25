@@ -36,12 +36,33 @@
                         </select>
                     </div>
                     <div class="detail-item">
-                        <label for="id_mes_carrera">Mes (1-12):</label>
-                        <input type="number" name="mes" id="id_mes_carrera" min="1" max="12" required>
+                        <label for="id_mes_carrera">Mes:</label>
+                        <select name="mes" id="id_mes_carrera" required>
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
                     </div>
                     <div class="detail-item">
                         <label for="id_anio_carrera">Año:</label>
-                        <input type="number" name="anio" id="id_anio_carrera" min="2024" max="2040" required>
+                        <select name="anio" id="id_anio_carrera" required>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-actions">
@@ -66,11 +87,32 @@
                     </div>
                     <div class="detail-item">
                         <label for="id_mes">Mes Correspondiente</label>
-                        <input type="number" name="mes" id="id_mes" min="1" max="12" required>
+                        <select name="mes" id="id_mes" required>
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
                     </div>
                     <div class="detail-item">
                         <label for="id_anio">Año Correspondiente</label>
-                        <input type="number" name="anio" id="id_anio" min="2024" max="2040" required>
+                        <select name="anio" id="id_anio" required>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select>
                     </div>
                     <div class="detail-item">
                         <label for="id_vencimiento">Fecha de Vencimiento</label>
@@ -90,6 +132,7 @@
                 <a href="{% url 'finanzas:concepto_pago_list' %}" class="btn-primary">Gestionar Conceptos de Pago</a>
                 <a href="{% url 'finanzas:listado_deudores' %}" class="btn-primary">Ver Reporte de Deudores</a>
                 <a href="{% url 'finanzas:deuda_list' %}" class="btn-primary">Ver Todas las Deudas Generadas</a>
+                <a href="{% url 'finanzas:listado_pagos' %}" class="btn-primary">Ver Todos los Pagos Realizados</a>
             </div>
         </div>
     </div>

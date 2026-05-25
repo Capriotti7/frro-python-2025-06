@@ -3,8 +3,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.utils import timezone
 from core.decorators import role_required
-from .models import Deuda
+from .models import Deuda, Pago
 from .forms import PagoForm, ConceptoPagoForm
 from academico.models import Curso
 from .models import ConceptoPago
@@ -39,10 +40,15 @@ def registrar_pago_view(request, deuda_pk):
 @login_required
 @role_required('is_superuser', 'is_admin')
 def gestion_financiera_view(request):
-    conceptos = ConceptoPago.objects.all()
+    conceptos = ConceptoPago.objects.exclude(tipo='CUOTA_MENSUAL')
     carreras = Carrera.objects.all().order_by('nombre')
     
-    # Estadísticas rápidas
+    # Estadísticas rápidas — primero actualizamos las pendientes vencidas
+    Deuda.objects.filter(
+        estado='Pendiente',
+        fecha_vencimiento__lt=timezone.now().date()
+    ).update(estado='Vencido')
+
     deudas_pendientes = Deuda.objects.filter(estado__in=['Pendiente', 'Vencido'])
     total_adeudado_real = sum(d.monto_final for d in deudas_pendientes)
     
@@ -90,7 +96,7 @@ def generar_deudas_carrera_view(request):
 @login_required
 @role_required('is_superuser', 'is_admin')
 def concepto_pago_list_view(request):
-    conceptos = ConceptoPago.objects.all().order_by('descripcion')
+    conceptos = ConceptoPago.objects.exclude(tipo='CUOTA_MENSUAL').order_by('descripcion')
     return render(request, 'finanzas/concepto/list.html', {'conceptos': conceptos})
 
 @login_required
@@ -170,3 +176,10 @@ def deuda_list_view(request):
     deudas = Deuda.objects.all().select_related('alumno', 'concepto').order_by('-fecha_vencimiento')
     context = {'deudas': deudas}
     return render(request, 'finanzas/deuda/list.html', context)
+
+@login_required
+@role_required('is_superuser', 'is_admin')
+def listado_pagos_view(request):
+    pagos = Pago.objects.all().select_related('deuda', 'deuda__alumno', 'deuda__concepto').order_by('-fecha_pago', '-id')
+    context = {'pagos': pagos}
+    return render(request, 'finanzas/listado_pagos.html', context)

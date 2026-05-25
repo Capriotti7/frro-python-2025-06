@@ -49,12 +49,15 @@ def generar_deudas_por_carrera(carrera_pk, mes, anio):
     """
     carrera = get_object_or_404(Carrera, pk=carrera_pk)
     
-    # Buscamos el concepto de pago "Cuota Mensual". ¡Debe existir!
-    # Creamos un try-except por si no existe, para evitar que la app crashee.
-    try:
-        concepto_cuota = ConceptoPago.objects.get(descripcion__iexact="Cuota Mensual")
-    except ConceptoPago.DoesNotExist:
-        return 0, 0, "Error: No se encontró el Concepto de Pago 'Cuota Mensual'."
+    # Obtenemos o creamos el concepto de pago genérico "Cuota Mensual"
+    # No importa el monto sugerido porque cada deuda usará el valor de la carrera.
+    concepto_cuota = ConceptoPago.objects.filter(tipo='CUOTA_MENSUAL').first()
+    if not concepto_cuota:
+        concepto_cuota = ConceptoPago.objects.create(
+            tipo='CUOTA_MENSUAL',
+            descripcion='Cuota Mensual',
+            monto_sugerido=0
+        )
 
     # Obtenemos el monto actual de la cuota para esta carrera.
     monto_cuota_actual = carrera.valor_cuota_actual

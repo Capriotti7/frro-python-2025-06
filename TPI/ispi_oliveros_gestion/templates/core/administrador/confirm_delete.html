@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container form-container">
+    <h2>Confirmar Eliminación</h2>
+    
+    <p>¿Está seguro que desea eliminar permanentemente al administrador <strong>{{ object }}</strong>?</p>
+    <p class="text-muted small" style="margin-bottom: 20px;">Esta acción también eliminará el usuario y sus accesos asociados en el sistema.</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-actions">
+            <button type="submit" class="btn-danger">Sí, eliminar</button>
+            <a href="{% url 'administrador_list' %}" class="btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

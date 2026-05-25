@@ -11,4 +11,12 @@ class PagoForm(forms.ModelForm):
 class ConceptoPagoForm(forms.ModelForm):
     class Meta:
         model = ConceptoPago
-        fields = ['descripcion', 'monto_sugerido']
+        fields = ['descripcion', 'tipo', 'monto_sugerido']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Removemos 'CUOTA_MENSUAL' de las opciones seleccionables porque se gestiona automático.
+        if 'tipo' in self.fields:
+            self.fields['tipo'].choices = [choice for choice in self.fields['tipo'].choices if choice[0] != 'CUOTA_MENSUAL']
+            if not self.instance.pk:
+                self.fields['tipo'].initial = 'OTRO'

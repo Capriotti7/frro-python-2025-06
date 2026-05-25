@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container form-container">
+    <h2>{% if object %}Editar{% else %}Nuevo{% endif %} Administrador</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        {{ form.as_p }}
+        
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Guardar</button>
+            <a href="{% url 'administrador_list' %}" class="btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

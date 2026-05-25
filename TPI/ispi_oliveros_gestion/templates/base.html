@@ -7,7 +7,7 @@
     <title>Gestión ISPI Oliveros</title>
     
     <link rel="icon" href="{% static 'img/favicon.jpeg' %}" type="image/png">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=1.1">
 </head>
 <body>
 
@@ -28,6 +28,10 @@
                         <a href="{% url 'academico:carrera_list' %}" {% if request.resolver_match.app_name == 'academico' %}class="active"{% endif %}>Académico</a> 
                         <a href="{% url 'finanzas:gestion_financiera' %}" {% if request.resolver_match.app_name == 'finanzas' %}class="active"{% endif %}>Finanzas</a> 
                     {% endif %} 
+
+                    {% if user.is_superuser %}
+                        <a href="{% url 'administrador_list' %}" {% if 'administradores' in request.path %}class="active"{% endif %}>Admins</a>
+                    {% endif %}
 
                     {% if user.perfil_docente %}
                         {# Enlaces para Docentes aquí si los necesitas en el futuro #}

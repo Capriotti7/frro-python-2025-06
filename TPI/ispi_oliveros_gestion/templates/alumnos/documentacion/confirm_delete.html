@@ -1,0 +1,16 @@
+﻿{% extends "base.html" %}
+
+{% block content %}
+<div class="container form-container">
+    <h2>Eliminar Documento</h2>
+    <p>¿Está seguro que desea eliminar el documento <strong>{{ object.nombre }}</strong>?</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-actions">
+            <button type="submit" class="btn-danger">Sí, Eliminar</button>
+            <a href="{% url 'alumnos:alumno_detail' object.alumno.pk %}" class="btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

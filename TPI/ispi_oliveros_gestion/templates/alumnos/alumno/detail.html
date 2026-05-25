@@ -1,4 +1,4 @@
-<!-- templates/alumnos/alumno_detail.html -->
+﻿<!-- templates/alumnos/alumno_detail.html -->
 
 {% extends "base.html" %}
 
@@ -81,7 +81,7 @@
             <tbody>
                 {% for deuda in deudas %}
                 <tr>
-                    <td>{{ deuda.concepto.descripcion }}</td>
+                    <td>{{ deuda.descripcion_completa }}</td>
                     <td>{{ deuda.fecha_vencimiento|date:"d/m/Y" }}</td>
                     <td>${{ deuda.monto_final|floatformat:2 }}</td>
                     <td><span class="status status-{{ deuda.estado|lower }}">{{ deuda.estado }}</span></td>
@@ -97,7 +97,75 @@
             </tbody>
         </table>
 
-    <!-- Sección Futura para historial académico, etc. -->
+    <h4 class="mt-4">Registro de Pagos Realizados</h4>
+    <table class="table-list">
+        <thead>
+            <tr>
+                <th>Fecha de Pago</th>
+                <th>Concepto Asociado</th>
+                <th>Monto Pagado</th>
+                <th>Medio de Pago</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pago in pagos_realizados %}
+            <tr>
+                <td>{{ pago.fecha_pago|date:"d/m/Y" }}</td>
+                <td>{{ pago.deuda.concepto.descripcion }}</td>
+                <td>${{ pago.monto_pagado|floatformat:2 }}</td>
+                <td>{{ pago.medio_de_pago }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No hay pagos registrados para este alumno.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- ================== SECCIÓN DOCUMENTACIÓN ================== -->
+    <div class="detail-header mt-4">
+        <h3>Documentación</h3>
+        <div class="header-actions">
+            <a href="{% url 'alumnos:documentacion_add' alumno_pk=alumno.pk %}" class="btn-primary">Subir Documento</a>
+        </div>
+    </div>
+    <table class="table-list">
+        <thead>
+            <tr>
+                <th>Documento</th>
+                <th>Fecha de Entrega</th>
+                <th>Estado</th>
+                <th>Archivo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doc in documentos %}
+            <tr>
+                <td>{{ doc.nombre }}</td>
+                <td>{{ doc.fecha_entrega|date:"d/m/Y" }}</td>
+                <td><span class="status status-{{ doc.estado|lower }}">{{ doc.estado }}</span></td>
+                <td>
+                    {% if doc.archivo_adjunto %}
+                        <a href="{{ doc.archivo_adjunto.url }}" target="_blank">Ver archivo</a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'alumnos:documentacion_delete' pk=doc.pk %}" class="btn-danger-small">Eliminar</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No hay documentos registrados para este alumno.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- ================== HISTORIAL ACADÉMICO ================== -->
     <h3 class="mt-4">Historial Académico</h3>
     <table class="table-list">
             <thead>

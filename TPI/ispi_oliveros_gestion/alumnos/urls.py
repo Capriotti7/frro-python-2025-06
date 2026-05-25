@@ -11,4 +11,8 @@ urlpatterns = [
     path('agregar/', views.alumno_create_view, name='alumno_add'),
     path('<int:pk>/editar/', views.alumno_update_view, name='alumno_edit'),
     path('<int:pk>/eliminar/', views.alumno_delete_view, name='alumno_delete'),
+    
+    # DocumentaciÃ³n
+    path('<int:alumno_pk>/documentacion/agregar/', views.DocumentacionCreateView.as_view(), name='documentacion_add'),
+    path('documentacion/<int:pk>/eliminar/', views.DocumentacionDeleteView.as_view(), name='documentacion_delete'),
 ]

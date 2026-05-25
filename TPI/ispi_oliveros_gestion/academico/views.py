@@ -21,8 +21,8 @@ def carrera_list_view(request):
     context = {'carreras': carreras}
     return render(request, 'academico/carrera/list.html', context)
 
-@role_required('is_superuser')
 @login_required
+@role_required('is_superuser')
 def carrera_create_view(request):
     if request.method == 'POST':
         form = CarreraForm(request.POST)
@@ -35,8 +35,8 @@ def carrera_create_view(request):
     context = {'form': form}
     return render(request, 'academico/carrera/form.html', context)
 
-@role_required('is_superuser')
 @login_required
+@role_required('is_superuser')
 def carrera_update_view(request, pk):
     carrera = get_object_or_404(Carrera, pk=pk)
     if request.method == 'POST':
@@ -50,8 +50,8 @@ def carrera_update_view(request, pk):
     context = {'form': form, 'carrera': carrera}
     return render(request, 'academico/carrera/form.html', context)
 
-@role_required('is_superuser')
 @login_required
+@role_required('is_superuser')
 def carrera_delete_view(request, pk):
     carrera = get_object_or_404(Carrera, pk=pk)
     if request.method == 'POST':
@@ -96,8 +96,8 @@ def materia_list_view(request, carrera_pk):
     context = {'carrera': carrera, 'materias': materias}
     return render(request, 'academico/materia/list.html', context)
 
-@role_required('is_superuser')
 @login_required
+@role_required('is_superuser')
 def materia_create_view(request, carrera_pk):
     carrera = get_object_or_404(Carrera, pk=carrera_pk)
     if request.method == 'POST':
@@ -114,8 +114,8 @@ def materia_create_view(request, carrera_pk):
     context = {'form': form, 'carrera': carrera}
     return render(request, 'academico/materia/form.html', context)
 
-@role_required('is_superuser')
 @login_required
+@role_required('is_superuser')
 def materia_update_view(request, pk):
     materia = get_object_or_404(Materia, pk=pk)
     carrera = materia.carrera
@@ -131,8 +131,8 @@ def materia_update_view(request, pk):
     context = {'form': form, 'carrera': carrera}
     return render(request, 'academico/materia/form.html', context)
 
-@role_required('is_superuser')
 @login_required
+@role_required('is_superuser')
 def materia_delete_view(request, pk):
     materia = get_object_or_404(Materia, pk=pk)
     if request.method == 'POST':
@@ -435,6 +435,12 @@ def curso_detail_view(request, curso_pk):
     curso = get_object_or_404(Curso, pk=curso_pk)
     # Buscamos todas las inscripciones para este curso
     inscripciones = InscripcionCurso.objects.filter(curso=curso).order_by('alumno__apellido', 'alumno__nombre')
+    
+    # Calculamos el porcentaje de asistencia para cada alumno inscripto
+    for inscripcion in inscripciones:
+        total = inscripcion.asistencias.count()
+        presentes = inscripcion.asistencias.filter(estado='Presente').count()
+        inscripcion.porcentaje_asistencia = (presentes / total * 100) if total > 0 else 0
     
     context = {
         'curso': curso,

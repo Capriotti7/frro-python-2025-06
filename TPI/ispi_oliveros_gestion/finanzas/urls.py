@@ -26,4 +26,7 @@ urlpatterns = [
 
     # URL para ver el listado completo de deudas
     path('deudas/', views.deuda_list_view, name='deuda_list'),
+
+    # URL para ver el listado completo de pagos
+    path('pagos/', views.listado_pagos_view, name='listado_pagos'),
 ]

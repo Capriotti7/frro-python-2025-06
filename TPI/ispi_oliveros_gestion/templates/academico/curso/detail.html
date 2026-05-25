@@ -33,6 +33,7 @@
                 <th>DNI</th>
                 <th>Apellido y Nombre</th>
                 <th>Email</th>
+                <th>Asistencia</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -42,13 +43,14 @@
                 <td>{{ inscripcion.alumno.dni }}</td>
                 <td>{{ inscripcion.alumno }}</td>
                 <td>{{ inscripcion.alumno.email }}</td>
+                <td>{{ inscripcion.porcentaje_asistencia|floatformat:1 }}%</td>
                 <td class="actions">
                     <a href="{% url 'alumnos:alumno_detail' pk=inscripcion.alumno.pk %}">Ver Ficha</a> 
                 </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="4">Todavía no hay alumnos inscriptos en este curso.</td>
+                <td colspan="5">Todavía no hay alumnos inscriptos en este curso.</td>
             </tr>
             {% endfor %}
         </tbody>
